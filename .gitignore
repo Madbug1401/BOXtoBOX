@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+.vercel
+.env
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+
+# armazenamento local de desenvolvimento (sem Redis)
+.data
+public/uploads/*
+!public/uploads/.gitkeep

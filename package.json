@@ -1,0 +1,28 @@
+{
+  "name": "boxtobox",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BOXtoBOX — a revista dos Tubarões Azuis. Site Next.js com modo admin (tudo editável).",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.41.0",
+    "@vercel/blob": "^2.9.0",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  }
+}

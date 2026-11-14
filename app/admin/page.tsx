@@ -1,0 +1,11 @@
+import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { isAdmin } from '@/lib/auth';
+import LoginForm from './LoginForm';
+
+export const metadata: Metadata = { title: 'Admin', robots: { index: false, follow: false } };
+
+export default async function AdminPage() {
+  if (await isAdmin()) redirect('/');
+  return <LoginForm />;
+}
