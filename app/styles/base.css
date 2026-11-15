@@ -101,6 +101,16 @@ button { font-family: inherit; }
 @keyframes par { from { transform: translateY(-8%); } to { transform: translateY(8%); } }
 @keyframes clipIn { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
 
+/* Reserva para browsers sem animation-timeline (Firefox, Safari antigo): ver components/site/RevealFallback.tsx */
+.rv-pre { opacity: 0 !important; transform: translateY(60px) !important; }
+.rv-pre.sr-l { transform: translateX(-60px) !important; }
+.rv-pre.word { opacity: .14 !important; transform: none !important; }
+.rv-pre.grow { opacity: 1 !important; transform: scaleX(0) !important; transform-origin: left; }
+.rv-pre.clip-in { opacity: 1 !important; transform: none !important; clip-path: inset(0 0 100% 0); }
+.rv-pre.tk-in { transform: translateY(40px) scale(.4) !important; }
+.rv-go { transform-origin: left; transition: opacity .9s var(--eo), transform .9s var(--eo), clip-path 1.1s var(--eio) !important; }
+.rv-go:not(.grow) { transform-origin: center; }
+
 /* ===== Cabeçalho ===== */
 .site-header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .hdr-dark { background: rgba(6,22,51,.92); border-bottom: 1px solid rgba(255,255,255,.08); color: #EAF0FB; }

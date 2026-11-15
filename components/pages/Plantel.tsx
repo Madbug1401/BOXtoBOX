@@ -6,7 +6,12 @@ import { Header, Footer, Arrow } from '@/components/site/ui';
 
 const faceStyle = (p: any): React.CSSProperties => {
   const [x, y, z] = p.face || [50, 30, 1];
-  return { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: `${x}% ${y}%`, transformOrigin: `${x}% ${y}%`, transform: `scale(${z})`, display: 'block' };
+  // Leva o ponto (x, y) da cara ao centro do círculo. O zoom mínimo garante que a foto continua
+  // a cobrir o círculo depois de deslocada (sem isto, caras junto à margem ficavam fora, ex.: Kevin Pina).
+  const fx = Math.min(Math.max(x, 1), 99);
+  const fy = Math.min(Math.max(y, 1), 99);
+  const zoom = Math.max(z, 50 / fx, 50 / (100 - fx), 50 / fy, 50 / (100 - fy));
+  return { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: `${x}% ${y}%`, transformOrigin: `${x}% ${y}%`, transform: `translate(${50 - x}%, ${50 - y}%) scale(${zoom.toFixed(2)})`, display: 'block' };
 };
 
 function Face({ p }: { p: any }) {

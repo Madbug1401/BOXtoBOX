@@ -175,7 +175,7 @@
 .card:hover { transform: translateY(-8px); }
 .card .big { transition: transform 1s var(--eo); }
 .card:hover .big { transform: translateX(-14px) scale(1.08); }
-.h-lead { flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; background: var(--blue); color: #fff; border-radius: 4px; overflow: hidden; }
+.h-rlead { flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; background: var(--blue); color: #fff; border-radius: 4px; overflow: hidden; }
 .h-lead-img { position: relative; min-height: 340px; display: flex; align-items: flex-end; padding: 28px; overflow: hidden; }
 .h-lead-img > img { opacity: .9; object-position: 50% 22%; }
 .h-lead-big { position: absolute; right: -10px; top: -20px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 260px; line-height: .8; color: rgba(255,255,255,.12); }

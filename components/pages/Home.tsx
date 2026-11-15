@@ -361,7 +361,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="h-radar-grid">
-            <HrefLink path="home.radar.lead.href" className="card sr h-lead">
+            <HrefLink path="home.radar.lead.href" className="card sr h-rlead">
               <div className="clip-in h-lead-img">
                 <EImg path="home.radar.lead.photo" className="big duo cover" />
                 <E path="home.radar.lead.big" className="h-lead-big" aria-hidden="true" />

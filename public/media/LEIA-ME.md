@@ -1,15 +1,10 @@
 # Fotos e vídeo do site
 
-O conteúdo inicial do site aponta para estes ficheiros. Enquanto não existirem, o site mostra um marcador azul no lugar da imagem.
-
-Tens duas opções:
-
-1. **Copiar os ficheiros para esta pasta** (`public/media/`) com exatamente estes nomes e fazer commit; ou
-2. **Carregá-los no modo admin**: passa o rato sobre a imagem → "Trocar imagem". Ficam guardados no Vercel Blob.
+O conteúdo inicial do site aponta para estes ficheiros, que já estão todos nesta pasta. Para trocar uma foto, substitui o ficheiro mantendo o nome, ou carrega outra no modo admin (passa o rato sobre a imagem → "Trocar imagem"; fica guardada no Vercel Blob).
 
 | Ficheiro | O que é | Crédito |
 |---|---|---|
-| `intro-bancada.jpg` | Fundo da abertura animada e do selo circular do manifesto | [confirmar] |
+| `tubarao-azul.jpg` | Tubarão-azul (Açores): fundo da abertura animada e selo circular do manifesto | Diego Delso · CC BY-SA 4.0 |
 | `vozinha.jpg` | Vozinha (círculo do destaque, plantel) | Petsbikes · CC BY 4.0 |
 | `festa-golo.jpg` | Dois jogadores abraçados a festejar (secção vídeo) | [FCF — confirmar] |
 | `ayoni-golo.mp4` | Vídeo do primeiro golo de Ayoni dos Santos | [FONTE — confirmar autorização] |

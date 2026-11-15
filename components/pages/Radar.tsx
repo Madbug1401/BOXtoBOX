@@ -77,8 +77,12 @@ export default function RadarPage() {
   const fi = Math.max(0, editions.findIndex((e: any) => e.slug === r.featured));
   const feat = editions[fi];
   const FP = `editions.${fi}`;
-  const strip = c.players.filter((p: any) => p.strip && p.photo?.src);
-  const blips = editions.filter((e: any) => e.photo?.src).slice(0, 4);
+  // Faixa e radar usam listas próprias da rubrica (como no design); se faltarem, cai para os jogadores da faixa da homepage.
+  const byId = (ids: string[] | undefined) => (ids || []).map((id) => c.players.find((p: any) => p.id === id)).filter((p: any) => p && p.photo?.src);
+  const stripIds = byId(r.stripIds);
+  const strip = stripIds.length ? stripIds : c.players.filter((p: any) => p.strip && p.photo?.src);
+  const blipIds = byId(r.blipIds);
+  const blips = (blipIds.length ? blipIds : editions.filter((e: any) => e.photo?.src)).slice(0, 4);
   const blipPos = [[70, 30, 64, 1.0], [28, 64, 56, 1.3], [72, 72, 52, 1.6], [34, 26, 46, 1.9]];
   const list = editions.map((e: any, i: number) => ({ e, i })).filter(({ e }: any) => filter === 'all' || e.group === filter);
   const G = r.gallery.length;
@@ -107,7 +111,7 @@ export default function RadarPage() {
           <div style={{ top: '66%', height: '34%', background: '#061633', animationDelay: '.33s' }} />
         </div>
       )}
-      <Header theme="light" />
+      <Header theme="light" ctaPath="rubrica.suggestCta" />
 
       {/* MASTHEAD */}
       <section aria-labelledby="rb-h" className="r-mast">

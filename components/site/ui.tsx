@@ -53,7 +53,7 @@ export function Wordmark({ toColor, className }: { toColor: string; className?: 
 }
 
 // ---------------------------------------------------------------------------
-export function Header({ theme = 'dark', mark }: { theme?: 'dark' | 'light'; mark?: string }) {
+export function Header({ theme = 'dark', mark, ctaPath = 'settings.cta' }: { theme?: 'dark' | 'light'; mark?: string; ctaPath?: string }) {
   const ed = useEditor();
   const accent = useAccent();
   const pathname = usePathname();
@@ -71,12 +71,12 @@ export function Header({ theme = 'dark', mark }: { theme?: 'dark' | 'light'; mar
             const active = item.href && !item.href.includes('#') && item.href !== '/' && pathname.startsWith(item.href);
             return (
               <span className="eitem nav-item">
-                <ELink path={p} className={cx('ul', active && 'is-active')} aria-current={active ? 'page' : undefined} />
+                <ELink path={p} className={cx('ul', active && 'is-active')} style={active && light ? { color: markColor } : undefined} aria-current={active ? 'page' : undefined} />
                 <ItemTools noDup />
               </span>
             );
           }} />
-          <ELink path="settings.cta" className={cx('btn hdr-cta', light && 'btn-ink')}  />
+          <ELink path={ctaPath} className={cx('btn hdr-cta', light && 'btn-ink')}  />
         </nav>
       </div>
     </header>

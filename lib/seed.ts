@@ -6,7 +6,7 @@ const M = (f: string) => '/media/' + f;
 const img = (src: string, alt = '', pos = '50% 50%', credit = '') => ({ src, alt, pos, credit });
 
 const P = {
-  intro: M('intro-bancada.jpg'),
+  intro: M('tubarao-azul.jpg'),
   vozinha: M('vozinha.jpg'),
   festaGolo: M('festa-golo.jpg'),
   video: M('ayoni-golo.mp4'),
@@ -319,6 +319,8 @@ export const seed = {
     subPre: 'Os nomes que',
     subSerif: 'ninguém te contou.',
     suggestCta: { label: 'Sugerir um nome', href: '#sugerir' },
+    stripIds: ['helio', 'liv', 'deroy', 'pico', 'jamiro', 'wagner', 'garry', 'kevin'],
+    blipIds: ['helio', 'deroy', 'pico', 'liv'],
     stripLabel: 'Na mira do Radar',
     stripHint: 'Passa o rato para ver a cor',
     rulesKicker: 'Como funciona',
