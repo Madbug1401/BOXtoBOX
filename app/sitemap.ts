@@ -9,9 +9,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = updatedAt ? new Date(updatedAt) : new Date();
   return [
     { url: base + '/', lastModified },
-    { url: base + '/radar', lastModified },
+    { url: base + '/rubricas', lastModified },
     { url: base + '/plantel', lastModified },
-    ...content.editions.filter((e: any) => e.published).map((e: any) => ({ url: `${base}/radar/${e.slug}`, lastModified })),
-    ...content.articles.filter((a: any) => a.published).map((a: any) => ({ url: `${base}/artigos/${a.slug}`, lastModified }))
+    { url: base + '/jogos', lastModified },
+    { url: base + '/relvado', lastModified },
+    ...(content.matches || []).filter((m: any) => m.published).map((m: any) => ({ url: `${base}/jogos/${m.slug}`, lastModified })),
+    ...content.editions.filter((e: any) => e.published).map((e: any) => ({ url: `${base}/rubricas/${e.slug}`, lastModified })),
+    ...content.articles.filter((a: any) => a.published).map((a: any) => ({ url: `${base}/relvado/${a.slug}`, lastModified }))
   ];
 }

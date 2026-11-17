@@ -21,10 +21,10 @@ export default function EditionPage({ slug }: { slug: string }) {
 
       <div className="ed-brand">
         <div className="sheet ed-brand-in">
-          <Link href="/radar" className="ed-brand-a"><E path="edicao.back" /></Link>
+          <Link href="/rubricas" className="ed-brand-a"><E path="edicao.back" /></Link>
           <nav aria-label="Secções" className="ed-brand-nav">
             <Link href="/">Início</Link>
-            {c.articles[0] && <Link href={'/artigos/' + c.articles[0].slug}>Análise</Link>}
+            {c.articles[0] && <Link href={'/relvado/' + c.articles[0].slug}>Análise</Link>}
             <Link href="/plantel">Plantel</Link>
           </nav>
           <E path="edicao.demoBadge" className="ed-demo" />
@@ -69,7 +69,7 @@ export default function EditionPage({ slug }: { slug: string }) {
           {c.editions.map((o: any) => {
             const on = o.slug === slug;
             return (
-              <Link key={o.slug} href={'/radar/' + o.slug} className={cx('tab', on && 'on')} aria-current={on ? 'page' : undefined} scroll>
+              <Link key={o.slug} href={'/rubricas/' + o.slug} className={cx('tab', on && 'on')} aria-current={on ? 'page' : undefined} scroll>
                 <span className="tab-av"><SafeImg src={o.photo?.src} alt="" style={{ objectPosition: o.photo?.pos }} fallback={<span>{o.mono || o.plate || o.num}</span>} /></span>
                 <span className="tn"><span className="lbl" style={{ color: on ? '#F7D116' : 'var(--red)' }}>N.º {o.num}</span><span className="tab-name">{o.name}</span></span>
               </Link>
@@ -174,7 +174,7 @@ export default function EditionPage({ slug }: { slug: string }) {
               <E as="p" path="edicao.opinionBy" className="lbl" style={{ margin: '10px 0 0', fontSize: 12, textAlign: 'right' }} />
             </section>
 
-            <CardLink href="/radar#sugerir" className="sr ed-ad">
+            <CardLink href="/rubricas#sugerir" className="sr ed-ad">
               <E path="edicao.adKicker" className="lbl" style={{ color: 'var(--red)' }} />
               <E path="edicao.adTitle" className="ed-ad-t" />
               <E path="edicao.adText" className="ed-ad-p" />
@@ -192,7 +192,7 @@ export default function EditionPage({ slug }: { slug: string }) {
             <div className="rule" />
             <div className="ed-also">
               {others.map((o: any) => (
-                <Link key={o.slug} href={'/radar/' + o.slug} className="mini">
+                <Link key={o.slug} href={'/rubricas/' + o.slug} className="mini">
                   <span className="ht mini-img"><SafeImg src={o.photo?.src} alt="" style={{ objectPosition: o.photo?.pos }} fallback={<span className="mini-plate">{o.plate || o.mono || o.num}</span>} /></span>
                   <span className="mini-b">
                     <span className="lbl" style={{ fontSize: 12, color: 'var(--red)' }}>N.º {o.num} · {o.name}</span>

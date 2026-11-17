@@ -165,6 +165,7 @@ export function publicView(content: any) {
   return {
     ...content,
     articles: (content.articles || []).filter((a: any) => a.published),
-    editions: (content.editions || []).filter((e: any) => e.published)
+    editions: (content.editions || []).filter((e: any) => e.published),
+    matches: (content.matches || []).filter((m: any) => m.published)
   };
 }

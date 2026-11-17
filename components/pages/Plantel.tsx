@@ -193,7 +193,7 @@ export default function PlantelPage() {
                     <E as="h3" path={`players.${si}.name`} className="display p-sel-name" />
                     <E as="p" path={`players.${si}.tag`} className="p-sel-tag" />
                     <E as="p" path={`players.${si}.bio`} className="p-sel-bio" multiline />
-                    {s.radar && c.editions.some((e: any) => e.slug === s.radar) && <Link className="ul ul0 lnk" href={'/radar/' + s.radar} style={{ alignSelf: 'flex-start', fontSize: 14, padding: '10px 0' }}>{t.radarLink}</Link>}
+                    {s.radar && c.editions.some((e: any) => e.slug === s.radar) && <Link className="ul ul0 lnk" href={'/rubricas/' + s.radar} style={{ alignSelf: 'flex-start', fontSize: 14, padding: '10px 0' }}>{t.radarLink}</Link>}
                     {ed.editing && <span className="e-note">Texto do link: <E path="plantel.radarLink" /></span>}
                   </div>
                 </article>

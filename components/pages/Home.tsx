@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { E, ELink, EImg, EVideo, EList, ItemTools, EColor, EToggle, Sec, HrefLink, useEditor, SafeImg, useAccent, cx, rich } from '@/components/editor/core';
 import { Header, Footer, Arrow, Star, Ball, Pitch, submitForm } from '@/components/site/ui';
+import { Score, record } from '@/components/pages/Matches';
 
 const ring = (n: number, size: string, delay0: number, step: number) =>
   Array.from({ length: n }, (_, i) => ({
@@ -103,7 +104,7 @@ export default function HomePage() {
   const c = ed.content;
   const h = c.home;
   const [intro, setIntro] = useState<boolean>(!!c.settings.intro);
-  const [phase, setPhase] = useState(0);
+  const [rp, setRp] = useState(1);
 
   useEffect(() => {
     if (!c.settings.intro || ed.editing) return setIntro(false);
@@ -117,9 +118,15 @@ export default function HomePage() {
 
   const showIntro = intro && !ed.editing && c.settings.intro;
   const base = showIntro ? '4.1s' : '.15s';
-  const phases = h.tactics.board.phases || [];
-  const pi = Math.min(phase, Math.max(0, phases.length - 1));
-  const team = h.campaign.team;
+  const gTeam = c.jogos?.team || 'Cabo Verde';
+  const allMatches: any[] = c.matches || [];
+  const finals = allMatches.filter((m) => m.status === 'final');
+  const lastMatch = finals[0];
+  const nextMatch = allMatches.find((m) => m.status !== 'final');
+  const gRec = record(allMatches, gTeam);
+  const relLead = (c.articles || []).find((a: any) => (a.pillar || 'relvado') === 'relvado');
+  const relIdx = relLead ? c.articles.indexOf(relLead) : -1;
+  const relPhases = relLead?.board?.phases || [];
   const squad = c.players.filter((p: any) => p.strip);
   const words = String(c.settings.slogan || '').split(' ');
   const ticker = ed.editing ? h.ticker : [...h.ticker, ...h.ticker];
@@ -195,34 +202,100 @@ export default function HomePage() {
         </div>
       </Sec>
 
-      {/* CAMPANHA */}
-      <Sec k="home.campaign" label="A campanha" aria-labelledby="res-h" className="h-camp">
+      {/* ÚLTIMAS (notícias) */}
+      <Sec k="home.news" label="Últimas" id="ultimas" aria-labelledby="news-h" className="hw-news">
         <div className="wrap">
-          <div className="sr h-sechead">
+          <div className="sr h-sechead" style={{ marginBottom: 40 }}>
             <div>
-              <E as="p" path="home.campaign.kicker" className="kicker" style={{ color: 'var(--muted3)', marginBottom: 14 }} />
-              <h2 id="res-h" className="display h-xl" style={{ color: '#fff' }}><E path="home.campaign.title" /><br /><E path="home.campaign.titleSerif" className="serif acc" /></h2>
+              <E as="p" path="home.news.kicker" className="kicker acc" style={{ marginBottom: 14 }} />
+              <h2 id="news-h" className="display h-xl" style={{ color: '#fff' }}><E path="home.news.title" /><br /><E path="home.news.titleSerif" className="serif acc" /></h2>
             </div>
-            <ELink path="home.campaign.archive" className="ul ul0 lnk" style={{ fontSize: 14 }} />
           </div>
-          {ed.editing && <span className="e-note">Equipa a realçar nos resultados: <E path="home.campaign.team" /></span>}
-          <div className="h-rows">
-            <EList path="home.campaign.matches" newItem={{ tag: 'Jogo', home: 'Cabo Verde', hs: '0', as: '0', away: 'Adversário', note: 'Nota do jogo.', highlight: false }} addLabel="Jogo" render={(m, p) => (
-              <article className="row sr h-row eitem">
-                <E as="div" path={p + '.tag'} className="h-row-tag" style={{ color: m.highlight ? accent : 'var(--muted3)' }} />
-                <div className="h-row-score">
-                  <E path={p + '.home'} className="h-team" style={{ textAlign: 'right', color: m.home === team ? accent : '#fff' }} />
-                  <span className="sc h-sc"><E path={p + '.hs'} /><span className="h-sc-bar" /><E path={p + '.as'} /></span>
-                  <E path={p + '.away'} className="h-team" style={{ color: m.away === team ? accent : '#fff' }} />
-                </div>
-                <E as="p" path={p + '.note'} className="h-row-note" />
-                <EToggle path={p + '.highlight'} label="destacar" />
+          <div className="hw-news-grid">
+            <EList path="home.news.items" newItem={{ kicker: 'Secção', title: 'Título da notícia', text: 'Resumo curto.', href: '/', date: '[DATA]', photo: { src: '', alt: '', pos: '50% 50%', credit: '' } }} addLabel="Notícia" render={(n, p, i) => (
+              <HrefLink path={p + '.href'} className={cx('hw-n sr eitem', i === 0 && 'hw-n-lead')}>
+                <span className="hw-n-img ph">
+                  {n.photo?.src || ed.editing ? <EImg path={p + '.photo'} className="cover" label=" " /> : <span className="hw-n-ph" aria-hidden="true"><Star size={44} fill={accent} /></span>}
+                </span>
+                <span className="hw-n-b">
+                  <E path={p + '.kicker'} className="hw-n-k" />
+                  <E path={p + '.title'} className="hw-n-t" />
+                  <E path={p + '.text'} className="hw-n-p" />
+                  <E path={p + '.date'} className="hw-n-d" />
+                </span>
                 <ItemTools />
-              </article>
+              </HrefLink>
             )} />
           </div>
         </div>
       </Sec>
+
+      {/* JOGOS (resumo) */}
+      <Sec k="home.gamesW" label="Jogos" aria-labelledby="gw-h" className="hw-games">
+        <div className="wrap">
+          <div className="sr h-sechead" style={{ marginBottom: 36 }}>
+            <div>
+              <E as="p" path="home.gamesW.kicker" className="kicker" style={{ color: 'var(--muted3)', marginBottom: 14 }} />
+              <h2 id="gw-h" className="display h-xl" style={{ color: '#fff' }}><E path="home.gamesW.title" /><br /><E path="home.gamesW.titleSerif" className="serif acc" /></h2>
+            </div>
+            <ELink path="home.gamesW.cta" className="btn pill pill-acc"><Arrow /></ELink>
+          </div>
+          <div className="hw-g-grid">
+            {lastMatch && (
+              <Link href={'/jogos/' + lastMatch.slug} className="hw-g-last sr">
+                <span className="kicker acc">Último jogo · {rich(lastMatch.comp)}</span>
+                <span className="hw-g-stage">{rich(lastMatch.stage)}{lastMatch.extra ? ` · ${lastMatch.extra}` : ''}</span>
+                <Score m={lastMatch} team={gTeam} />
+                <span className="hw-g-sum">{rich(lastMatch.summary)}</span>
+                <span className="hw-g-go">Ficha do jogo <Arrow size={16} /></span>
+              </Link>
+            )}
+            <div className="hw-g-list sr">
+              {finals.slice(1, 4).map((m: any) => (
+                <Link key={m.slug} href={'/jogos/' + m.slug} className="hw-g-row"><span className="hw-g-rs">{rich(m.stage)}</span><Score m={m} team={gTeam} /></Link>
+              ))}
+            </div>
+            <div className="hw-g-side sr">
+              <div className="hw-g-rec">
+                {[['J', gRec.j], ['V', gRec.v], ['E', gRec.e], ['D', gRec.d], ['GM', gRec.gm], ['GS', gRec.gs]].map(([l, v]) => <div key={l as string}><strong>{v}</strong><span>{l}</span></div>)}
+              </div>
+              {nextMatch && (
+                <Link href={'/jogos/' + nextMatch.slug} className="hw-g-next">
+                  <span className="kicker acc">Próximo jogo</span>
+                  <Score m={nextMatch} team={gTeam} />
+                  <span className="hw-g-stage">{rich(nextMatch.date)} · {rich(nextMatch.city)}</span>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </Sec>
+
+      {/* RELVADO (resumo) */}
+      {relLead && (
+        <Sec k="home.relvadoW" label="Relvado" aria-labelledby="rw-h" className="hw-rel">
+          <div className="wrap hw-rel-in">
+            <div className="hw-rel-text">
+              <E as="p" path="home.relvadoW.kicker" className="sr kicker acc" style={{ marginBottom: 14 }} />
+              <h2 id="rw-h" className="sr display h-xl" style={{ color: '#fff' }}><E path="home.relvadoW.title" /><br /><E path="home.relvadoW.titleSerif" className="serif acc" /></h2>
+              <Link href={'/relvado/' + relLead.slug} className="sr hw-rel-a">
+                <strong>{String(relLead.titleLines).replace(/\n/g, ' ')} <span className="serif">{relLead.titleSerif}</span></strong>
+                <span>{relLead.summary || relLead.deck}</span>
+              </Link>
+              <div className="sr hw-rel-ms" role="group" aria-label="Momentos do jogo">
+                {relPhases.map((ph: any, i: number) => (
+                  <button key={i} type="button" className={cx('hw-rel-m', i === rp && 'on')} onClick={() => setRp(i)} aria-pressed={i === rp}><b>{String(i + 1).padStart(2, '0')}</b>{ph.label}</button>
+                ))}
+              </div>
+              <p className="sr hw-rel-cap">{relPhases[rp]?.caption}</p>
+              <ELink path="home.relvadoW.cta" className="btn pill pill-acc sr" style={{ marginTop: 24 }}><Arrow /></ELink>
+            </div>
+            <div className="sr hw-rel-board">
+              {relPhases.length > 0 && <Pitch path={`articles.${relIdx}.board`} phase={Math.min(rp, relPhases.length - 1)} variant="home" />}
+            </div>
+          </div>
+        </Sec>
+      )}
 
       {/* VÍDEO */}
       <Sec k="home.video" label="Vídeo" id="video" aria-labelledby="vid-h" className="h-video">
@@ -243,18 +316,6 @@ export default function HomePage() {
             <figcaption><strong><E path="home.video.captionStrong" /></strong> <E path="home.video.caption" /></figcaption>
           </figure>
         </div>
-      </Sec>
-
-      {/* BANDA FOTO */}
-      <Sec k="home.band" label="Faixa de foto" aria-labelledby="band-h" className="ph h-band">
-        <div className="par h-band-img"><EImg path="home.band.photo" /></div>
-        <div aria-hidden="true" className="h-band-grad" />
-        <div className="wrap h-band-in">
-          <E as="p" path="home.band.kicker" className="sr kicker acc" style={{ marginBottom: 16 }} />
-          <h2 id="band-h" className="sr display h-band-t"><E path="home.band.lines" multiline /><br /><E path="home.band.lineSerif" className="serif acc" /></h2>
-          <ELink path="home.band.link" className="ul ul0 lnk" style={{ alignSelf: 'flex-start', marginTop: 28 }} />
-        </div>
-        <E as="span" path="home.band.photo.credit" className="credit" />
       </Sec>
 
       {/* MANIFESTO */}
@@ -289,41 +350,6 @@ export default function HomePage() {
                 <ItemTools />
               </HrefLink>
             )} />
-          </div>
-        </div>
-      </Sec>
-
-      {/* TÁTICA */}
-      <Sec k="home.tactics" label="Tática" id="taticas" aria-labelledby="tat-h" className="h-tac">
-        <div className="wrap h-tac-in">
-          <figure className="sr h-tac-fig">
-            <Pitch path="home.tactics.board" phase={pi} variant="home" />
-            <E as="figcaption" path={`home.tactics.board.phases.${pi}.caption`} className="h-tac-cap" />
-          </figure>
-          <div className="h-tac-text">
-            <E as="p" path="home.tactics.kicker" className="sr kicker acc" style={{ marginBottom: 18 }} />
-            <h2 id="tat-h" className="sr display h-lg" style={{ color: '#fff' }}><E path="home.tactics.title" /><br /><E path="home.tactics.titleSerif" className="serif acc" /></h2>
-            <E as="p" path="home.tactics.text" className="sr h-tac-p" multiline />
-            <div className="sr h-modes" role="group" aria-label="Fase do jogo">
-              {phases.map((ph: any, i: number) => (
-                <button key={i} type="button" className={cx('mode', i === pi && 'on')} onClick={() => setPhase(i)} aria-pressed={i === pi}>
-                  <E path={`home.tactics.board.phases.${i}.label`} />
-                </button>
-              ))}
-            </div>
-            <div className="h-notes">
-              <EList path={`home.tactics.board.phases.${pi}.notes`} newItem={{ num: '0X', t: 'Título', d: 'Descrição.' }} addLabel="Nota" render={(_n, p) => (
-                <div className="sr h-note eitem">
-                  <E path={p + '.num'} className="h-note-n acc" />
-                  <div>
-                    <E as="div" path={p + '.t'} className="h-note-t" />
-                    <E as="p" path={p + '.d'} className="h-note-d" />
-                  </div>
-                  <ItemTools />
-                </div>
-              )} />
-            </div>
-            <ELink path="home.tactics.link" className="ul ul0 lnk" style={{ display: 'inline-flex', marginTop: 28 }} />
           </div>
         </div>
       </Sec>
@@ -374,7 +400,7 @@ export default function HomePage() {
               </div>
             </HrefLink>
             <div className="h-side">
-              <EList path="home.radar.side" newItem={{ name: 'Nome', pos: 'POS', tag: 'Etiqueta', bg: '#0B3B8C', photo: { src: '', alt: '', pos: '50% 30%' }, text: 'Descrição.', href: '/radar' }} addLabel="Cartão" render={(r, p) => (
+              <EList path="home.radar.side" newItem={{ name: 'Nome', pos: 'POS', tag: 'Etiqueta', bg: '#0B3B8C', photo: { src: '', alt: '', pos: '50% 30%' }, text: 'Descrição.', href: '/rubricas' }} addLabel="Cartão" render={(r, p) => (
                 <HrefLink path={p + '.href'} className="card sr h-sidecard eitem">
                   <div className="h-sidecard-img" style={{ background: r.bg }}>
                     {(r.photo?.src || ed.editing) && <EImg path={p + '.photo'} className="big duo cover" label=" " />}

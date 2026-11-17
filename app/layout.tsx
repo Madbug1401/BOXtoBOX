@@ -10,6 +10,8 @@ import './styles/article.css';
 import './styles/radar.css';
 import './styles/edition.css';
 import './styles/plantel.css';
+import './styles/tactic.css';
+import './styles/jogos.css';
 import './styles/admin.css';
 
 export const dynamic = 'force-dynamic';

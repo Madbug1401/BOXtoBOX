@@ -59,9 +59,12 @@ function PagesPanel({ close }: { close: () => void }) {
     <>
       <p className="ap-p">No modo edição, os links do site não navegam (para poderes editar o texto). Usa esta lista — ou Ctrl/Cmd+clique num link.</p>
       <L href="/">Início</L>
-      <L href="/radar">Rubrica Radar</L>
-      {c.editions.map((e: any) => <L key={e.slug} href={'/radar/' + e.slug} sub={e.published ? '/radar/' + e.slug : 'rascunho'}>Radar #{e.num} · {e.name}</L>)}
-      {c.articles.map((a: any) => <L key={a.slug} href={'/artigos/' + a.slug} sub={a.published ? '/artigos/' + a.slug : 'rascunho'}>{a.titleLines.replace(/\n/g, ' ')}</L>)}
+      <L href="/jogos">Jogos</L>
+      {(c.matches || []).map((m: any) => <L key={m.slug} href={'/jogos/' + m.slug} sub={m.published ? '/jogos/' + m.slug : 'rascunho'}>{m.home} {m.status === 'final' ? `${m.hs}–${m.as}` : 'vs'} {m.away}</L>)}
+      <L href="/relvado">Relvado</L>
+      <L href="/rubricas">Rubrica Radar</L>
+      {c.editions.map((e: any) => <L key={e.slug} href={'/rubricas/' + e.slug} sub={e.published ? '/rubricas/' + e.slug : 'rascunho'}>Radar #{e.num} · {e.name}</L>)}
+      {c.articles.map((a: any) => <L key={a.slug} href={'/relvado/' + a.slug} sub={a.published ? '/relvado/' + a.slug : 'rascunho'}>{a.titleLines.replace(/\n/g, ' ')}</L>)}
       <L href="/plantel">Plantel</L>
     </>
   );
@@ -73,7 +76,7 @@ function ContentPanel({ close }: { close: () => void }) {
   const c = ed.content;
   const [tab, setTab] = useState<'articles' | 'editions'>('articles');
   const list: any[] = c[tab];
-  const base = tab === 'articles' ? '/artigos/' : '/radar/';
+  const base = tab === 'articles' ? '/relvado/' : '/rubricas/';
 
   const create = () => {
     const title = window.prompt(tab === 'articles' ? 'Título do novo artigo:' : 'Nome da pessoa para a nova edição do Radar:');

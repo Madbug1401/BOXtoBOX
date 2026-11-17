@@ -340,7 +340,7 @@ export function SmartLink({ href, className, style, children, ...rest }: any) {
 
 function promptHref(ed: EditorCtx, path: string) {
   const cur = getIn(ed.content, path) || '';
-  const v = window.prompt('Endereço da ligação (ex.: /plantel, /radar/pico-lopes, #newsletter ou https://…)', cur);
+  const v = window.prompt('Endereço da ligação (ex.: /plantel, /rubricas/pico-lopes, #newsletter ou https://…)', cur);
   if (v !== null) ed.set(path, v.trim());
 }
 

@@ -51,6 +51,9 @@ const ART_POS = {
   bloco: [[38, 20], [62, 20], [16, 45], [39, 50], [61, 50], [84, 45], [16, 72], [39, 76], [61, 76], [84, 72], [50, 92]],
   gatilho: [[36, 11], [62, 14], [12, 36], [39, 40], [61, 40], [86, 34], [16, 62], [39, 66], [61, 66], [84, 62], [50, 90]],
   transicao: [[50, 9], [28, 17], [10, 28], [44, 31], [62, 47], [86, 22], [12, 56], [38, 72], [62, 72], [88, 50], [50, 92]],
+  ataque: [[40, 13], [60, 17], [10, 30], [40, 40], [58, 46], [86, 30], [14, 56], [38, 70], [62, 70], [88, 46], [50, 92]],
+  transdef: [[36, 32], [60, 28], [18, 52], [40, 57], [60, 58], [80, 50], [16, 72], [39, 77], [61, 77], [82, 70], [50, 92]],
+  canto: [[44, 9], [57, 7], [22, 32], [62, 15], [50, 27], [96, 2], [30, 44], [38, 12], [50, 10], [72, 42], [50, 90]],
   banco: [[38, 18], [62, 18], [16, 44], [39, 50], [61, 50], [84, 44], [16, 72], [39, 76], [61, 76], [84, 72], [50, 92]]
 };
 
@@ -69,12 +72,10 @@ export const seed = {
     instagram: '[@TEU_HANDLE]',
     socials: { instagram: '#', tiktok: '#', x: '#' },
     nav: [
-      { label: 'Relvado', href: '/#taticas' },
-      { label: 'Pessoas', href: '/#radar' },
-      { label: 'Análise', href: '/artigos/o-4-4-2-de-bubista' },
-      { label: 'Plantel', href: '/plantel' },
-      { label: 'Raízes', href: '/#historia' },
-      { label: 'Rubricas', href: '/radar' }
+      { label: 'Home', href: '/' },
+      { label: 'Jogos', href: '/jogos' },
+      { label: 'Relvado', href: '/relvado' },
+      { label: 'Rubricas', href: '/rubricas' }
     ],
     cta: { label: 'Subscrever', href: '/#newsletter' },
     footerLine: 'A revista de referência dos Tubarões Azuis.',
@@ -84,6 +85,30 @@ export const seed = {
   },
 
   home: {
+    news: {
+      kicker: 'Últimas',
+      title: 'O que há de novo',
+      titleSerif: 'na revista.',
+      items: [
+        { kicker: 'Relvado · Análise', title: 'O 4-4-2 de Bubista: linhas juntas, faca afiada', text: 'Os cinco momentos do jogo de Cabo Verde no Mundial, do bloco médio à bola parada.', href: '/relvado/o-4-4-2-de-bubista', date: '[DATA]', photo: img(P.helio, 'Hélio Varela conduz a bola no Mundial 2026', '60% 40%', 'Petsbikes · CC BY 4.0') },
+        { kicker: 'Rubricas · Radar #04', title: 'Pico Lopes: do LinkedIn ao Mundial', text: 'O central nascido em Dublin que organiza a defesa dos Tubarões Azuis.', href: '/rubricas/pico-lopes', date: '[DATA]', photo: img(P.pico, 'Roberto Pico Lopes', '50% 20%', 'Irish Football Fan TV · CC BY 3.0') },
+        { kicker: 'Jogos · 16 avos', title: 'Argentina 3–2 Cabo Verde: a campeã sofreu até ao fim', text: "Deroy Duarte aos 59' e Sidny Lopes Cabral aos 103'. Ficha, golos e estatística do jogo.", href: '/jogos/argentina-cabo-verde-2026', date: '[DATA]', photo: img(P.festaGolo, 'Dois jogadores de Cabo Verde abraçam-se a festejar um golo', '50% 30%', '[FCF — confirmar]') },
+        { kicker: 'Vídeo · Seleção', title: 'Ao terceiro jogo, Ayoni dos Santos marcou o primeiro golo', text: 'São 19 segundos — vê-os com som.', href: '/#video', date: '[DATA]', photo: img('', '') },
+        { kicker: 'Jogos · Houston', title: '68.278 no estádio para ver Cabo Verde e a Arábia Saudita', text: 'O 0–0 que deixou uma equipa inteira no relvado à espera do Espanha–Uruguai.', href: '/jogos/cabo-verde-arabia-saudita-2026', date: '[DATA]', photo: img('', '') }
+      ]
+    },
+    gamesW: {
+      kicker: 'Jogos',
+      title: 'Resultados',
+      titleSerif: 'e calendário.',
+      cta: { label: 'Ver todos os jogos', href: '/jogos' }
+    },
+    relvadoW: {
+      kicker: 'Relvado',
+      title: 'A análise',
+      titleSerif: 'em cinco momentos.',
+      cta: { label: 'Abrir o Relvado', href: '/relvado' }
+    },
     intro: {
       tagline: 'A revista dos Tubarões Azuis',
       cities: ['Praia', 'Houston', 'Miami'],
@@ -99,8 +124,8 @@ export const seed = {
       line3: 'Contra todos.',
       lead:
         'Espanha, Uruguai, Arábia Saudita e Argentina. No primeiro Mundial da história, os Tubarões Azuis só caíram no prolongamento — frente à campeã do mundo. Isto é o que os números não contam.',
-      cta1: { label: 'Ler a análise tática', href: '/#taticas' },
-      cta2: { label: 'Rubrica Radar: Hélio Varela', href: '/radar/helio-varela' },
+      cta1: { label: 'Ler a análise tática', href: '/relvado' },
+      cta2: { label: 'Rubrica Radar: Hélio Varela', href: '/rubricas/helio-varela' },
       photo: img(P.vozinha, '', '48% 18%'),
       badgeNum: '10',
       badgeText: 'ilhas, uma seleção'
@@ -143,7 +168,7 @@ export const seed = {
       kicker: 'Pessoas · Hélio Varela',
       lines: 'Entra.\nEmpata.',
       lineSerif: 'Repete.',
-      link: { label: 'O super-suplente no Radar →', href: '/radar/helio-varela' }
+      link: { label: 'O super-suplente no Radar →', href: '/rubricas/helio-varela' }
     },
     manifesto: {
       kicker: 'Porquê Box to Box',
@@ -154,7 +179,7 @@ export const seed = {
       photo: img(P.intro, '', '37% 50%'),
       bigWord: 'B2B',
       pillars: [
-        { num: '01', name: 'Relvado', text: 'Jogos, análise tática, estatística e calendário.', href: '/#taticas', color: '#0F5A3A' },
+        { num: '01', name: 'Relvado', text: 'Jogos, análise tática, estatística e calendário.', href: '/relvado', color: '#0F5A3A' },
         { num: '02', name: 'Pessoas', text: 'Perfis de jogadores, treinadores, adeptos, jornalistas e figuras históricas.', href: '/#radar', color: '#0B3B8C' },
         { num: '03', name: 'Raízes', text: 'História da seleção, futebol nas ilhas, formação e diáspora.', href: '/#historia', color: '#B3261E' }
       ]
@@ -165,7 +190,7 @@ export const seed = {
       titleSerif: 'linhas juntas, faca afiada.',
       text:
         'Cabo Verde não ganhou a posse a ninguém — ganhou o espaço. Duas linhas de quatro separadas por poucos metros, Livramento e Willy Semedo a fechar o primeiro passe, e um plano que não mudou nem contra a Argentina: sofrer junto e castigar a primeira hesitação.',
-      link: { label: 'Ler análise completa →', href: '/artigos/o-4-4-2-de-bubista' },
+      link: { label: 'Ler análise completa →', href: '/relvado/o-4-4-2-de-bubista' },
       board: {
         phases: [
           {
@@ -207,19 +232,19 @@ export const seed = {
       title: 'Os nomes que',
       titleSerif: 'ninguém te contou.',
       text: 'Toda a gente conhece o Vozinha. Nós falamos dos outros — os que fizeram o Mundial acontecer sem aparecer no resumo.',
-      cta: { label: 'Abrir a rubrica', href: '/radar' },
+      cta: { label: 'Abrir a rubrica', href: '/rubricas' },
       lead: {
         photo: img(P.pico, 'Roberto Pico Lopes', '50% 22%', 'Foto: Irish Football Fan TV · CC BY 3.0'),
         big: 'DEF',
         badge: 'Nascido em Dublin',
         name: 'Roberto “Pico” Lopes',
         text: 'Central irlandês de pai cabo-verdiano, recrutado com uma mensagem no LinkedIn. Hoje é o chefe da defesa que travou Espanha e Uruguai.',
-        href: '/radar/pico-lopes'
+        href: '/rubricas/pico-lopes'
       },
       side: [
-        { name: 'Hélio Varela', pos: 'AV', tag: 'Super-suplente', bg: '#B3261E', photo: img(P.helio, 'Hélio Varela', '68% 30%'), text: 'Saiu do banco para empatar com o Uruguai.', href: '/radar/helio-varela' },
-        { name: 'Sidny Lopes Cabral', pos: 'AV', tag: 'Golo do Mundial?', bg: '#061633', photo: img('', 'Sidny Lopes Cabral'), text: 'Ao minuto 103, pôs a bola onde o Dibu não chegava.', href: '/radar/sidny-lopes-cabral' },
-        { name: 'Deroy Duarte', pos: 'MED', tag: 'Motor do meio', bg: '#0F5A3A', photo: img(P.deroy, 'Deroy Duarte', '52% 22%'), text: 'Marcou à Argentina e liga bloco e ataque.', href: '/radar/deroy-duarte' }
+        { name: 'Hélio Varela', pos: 'AV', tag: 'Super-suplente', bg: '#B3261E', photo: img(P.helio, 'Hélio Varela', '68% 30%'), text: 'Saiu do banco para empatar com o Uruguai.', href: '/rubricas/helio-varela' },
+        { name: 'Sidny Lopes Cabral', pos: 'AV', tag: 'Golo do Mundial?', bg: '#061633', photo: img('', 'Sidny Lopes Cabral'), text: 'Ao minuto 103, pôs a bola onde o Dibu não chegava.', href: '/rubricas/sidny-lopes-cabral' },
+        { name: 'Deroy Duarte', pos: 'MED', tag: 'Motor do meio', bg: '#0F5A3A', photo: img(P.deroy, 'Deroy Duarte', '52% 22%'), text: 'Marcou à Argentina e liga bloco e ataque.', href: '/rubricas/deroy-duarte' }
       ]
     },
     history: {
@@ -308,7 +333,7 @@ export const seed = {
     moreText: 'Completar com a lista oficial dos 26 da FCF.',
     ctaTitle: 'Os que não\naparecem',
     ctaSerif: 'no resumo.',
-    cta2: { label: 'Abrir a rubrica Radar', href: '/radar' }
+    cta2: { label: 'Abrir a rubrica Radar', href: '/rubricas' }
   },
 
   rubrica: {
@@ -367,7 +392,7 @@ export const seed = {
     moreTitle: 'Continua',
     moreSerif: 'a ler.',
     more: [
-      { kicker: 'Relvado · Análise', title: 'O 4-4-2', titleSerif: 'de Bubista', text: 'Linhas juntas, faca afiada — o plano que levou Cabo Verde ao prolongamento com a Argentina.', href: '/artigos/o-4-4-2-de-bubista', bg: '#0F5A3A', photo: img(P.liv, '', '50% 15%') },
+      { kicker: 'Relvado · Análise', title: 'O 4-4-2', titleSerif: 'de Bubista', text: 'Linhas juntas, faca afiada — o plano que levou Cabo Verde ao prolongamento com a Argentina.', href: '/relvado/o-4-4-2-de-bubista', bg: '#0F5A3A', photo: img(P.liv, '', '50% 15%') },
       { kicker: 'Pessoas', title: 'O plantel', titleSerif: 'completo', text: 'Quem é quem nos Tubarões Azuis, da baliza ao ataque.', href: '/plantel', bg: '#B3261E', photo: img(P.can2021, '', '60% 40%') }
     ]
   },
@@ -604,6 +629,120 @@ export const seed = {
     }
   ],
 
+  jogos: {
+    kicker: 'Jogos · Seleção de Cabo Verde',
+    title: 'Calendário',
+    titleSerif: 'e resultados.',
+    intro: 'Todos os jogos dos Tubarões Azuis: resultado, ficha, golos e estatística. Os números do resumo são calculados a partir dos resultados.',
+    team: 'Cabo Verde',
+    nextLabel: 'Próximo jogo',
+    resultsLabel: 'Resultados',
+    recordLabel: 'O balanço',
+    statsTitle: 'Estatística',
+    eventsTitle: 'Golos e momentos',
+    lineupTitle: 'Onze inicial',
+    lineupNote: 'Onze base do Mundial (o mesmo do quadro tático). [CONFIRMAR o onze deste jogo]',
+    analysisCta: 'Ler a análise no Relvado',
+    plantelCta: { label: 'Ver o plantel', href: '/plantel' }
+  },
+
+  matches: [
+    {
+      slug: 'proximo-jogo', published: true, status: 'agendado',
+      comp: '[COMPETIÇÃO]', stage: '[FASE]', date: '[DATA]', time: '[HORA]', venue: '[ESTÁDIO]', city: '[CIDADE]', attendance: '',
+      home: 'Cabo Verde', away: '[ADVERSÁRIO]', hs: '', as: '', extra: '',
+      summary: 'Próximo compromisso dos Tubarões Azuis. [A ANUNCIAR]',
+      events: [], stats: [], analysis: ''
+    },
+    {
+      slug: 'argentina-cabo-verde-2026', published: true, status: 'final',
+      comp: 'Mundial 2026', stage: '16 avos de final', date: '[DATA]', time: '', venue: '[ESTÁDIO]', city: 'Miami', attendance: '',
+      home: 'Argentina', away: 'Cabo Verde', hs: '3', as: '2', extra: 'a.p.',
+      summary: "Deroy Duarte (59') e Lopes Cabral (103') fizeram a campeã sofrer até ao fim.",
+      events: [
+        { min: "59'", team: 'away', type: 'golo', player: 'Deroy Duarte', detail: '' },
+        { min: "103'", team: 'away', type: 'golo', player: 'Sidny Lopes Cabral', detail: 'No prolongamento' },
+        { min: '[?]', team: 'home', type: 'golo', player: '[MARCADORES DA ARGENTINA — A CONFIRMAR]', detail: '' }
+      ],
+      stats: [
+        { label: 'Posse de bola (%)', home: '[—]', away: '[—]' },
+        { label: 'Remates', home: '[—]', away: '[—]' },
+        { label: 'Remates enquadrados', home: '[—]', away: '[—]' },
+        { label: 'Cantos', home: '[—]', away: '[—]' },
+        { label: 'Faltas', home: '[—]', away: '[—]' },
+        { label: 'Cartões amarelos', home: '[—]', away: '[—]' }
+      ],
+      analysis: 'o-4-4-2-de-bubista'
+    },
+    {
+      slug: 'cabo-verde-arabia-saudita-2026', published: true, status: 'final',
+      comp: 'Mundial 2026', stage: 'Grupo H · 3.ª jornada', date: '[DATA]', time: '', venue: '[ESTÁDIO]', city: 'Houston', attendance: '68.278',
+      home: 'Cabo Verde', away: 'Arábia Saudita', hs: '0', as: '0', extra: '',
+      summary: '68.278 no estádio e uma equipa inteira no relvado à espera do Espanha–Uruguai.',
+      events: [],
+      stats: [
+        { label: 'Posse de bola (%)', home: '[—]', away: '[—]' },
+        { label: 'Remates', home: '[—]', away: '[—]' },
+        { label: 'Remates enquadrados', home: '[—]', away: '[—]' },
+        { label: 'Cantos', home: '[—]', away: '[—]' },
+        { label: 'Faltas', home: '[—]', away: '[—]' },
+        { label: 'Cartões amarelos', home: '[—]', away: '[—]' }
+      ],
+      analysis: 'o-4-4-2-de-bubista'
+    },
+    {
+      slug: 'uruguai-cabo-verde-2026', published: true, status: 'final',
+      comp: 'Mundial 2026', stage: 'Grupo H · 2.ª jornada', date: '[DATA]', time: '', venue: '[ESTÁDIO]', city: '[CIDADE]', attendance: '',
+      home: 'Uruguai', away: 'Cabo Verde', hs: '2', as: '2', extra: '',
+      summary: 'Golaço de Kevin Pina, reviravolta celeste, e Hélio Varela a empatar outra vez.',
+      events: [
+        { min: '[?]', team: 'away', type: 'golo', player: 'Kevin Pina', detail: '' },
+        { min: '[?]', team: 'away', type: 'golo', player: 'Hélio Varela', detail: 'Saído do banco' },
+        { min: '[?]', team: 'home', type: 'golo', player: '[MARCADORES DO URUGUAI — A CONFIRMAR]', detail: '' }
+      ],
+      stats: [
+        { label: 'Posse de bola (%)', home: '[—]', away: '[—]' },
+        { label: 'Remates', home: '[—]', away: '[—]' },
+        { label: 'Remates enquadrados', home: '[—]', away: '[—]' },
+        { label: 'Cantos', home: '[—]', away: '[—]' },
+        { label: 'Faltas', home: '[—]', away: '[—]' },
+        { label: 'Cartões amarelos', home: '[—]', away: '[—]' }
+      ],
+      analysis: 'o-4-4-2-de-bubista'
+    },
+    {
+      slug: 'espanha-cabo-verde-2026', published: true, status: 'final',
+      comp: 'Mundial 2026', stage: 'Grupo H · 1.ª jornada · Estreia', date: '[DATA]', time: '', venue: '[ESTÁDIO]', city: '[CIDADE]', attendance: '',
+      home: 'Espanha', away: 'Cabo Verde', hs: '0', as: '0', extra: '',
+      summary: 'A estreia que estragou a estreia de uma das favoritas.',
+      events: [],
+      stats: [
+        { label: 'Posse de bola (%)', home: '[—]', away: '[—]' },
+        { label: 'Remates', home: '[—]', away: '[—]' },
+        { label: 'Remates enquadrados', home: '[—]', away: '[—]' },
+        { label: 'Cantos', home: '[—]', away: '[—]' },
+        { label: 'Faltas', home: '[—]', away: '[—]' },
+        { label: 'Cartões amarelos', home: '[—]', away: '[—]' }
+      ],
+      analysis: 'o-4-4-2-de-bubista'
+    }
+  ],
+
+  relvado: {
+    kicker: 'Relvado · Análise',
+    title: 'O jogo,',
+    titleSerif: 'por dentro.',
+    intro: 'Cada análise divide o jogo nos seus cinco momentos e mostra-os no campo. No fim, o laboratório tático deixa-te mexer no plano.',
+    moments: [
+      { n: '01', t: 'Ataque', d: 'Com bola e organizado: como a equipa constrói e chega ao último terço.' },
+      { n: '02', t: 'Defesa', d: 'Sem bola e organizado: bloco, linhas e gatilhos de pressão.' },
+      { n: '03', t: 'Transição ofensiva', d: 'Os segundos depois de ganhar a bola.' },
+      { n: '04', t: 'Transição defensiva', d: 'Os segundos depois de perder a bola.' },
+      { n: '05', t: 'Bola parada', d: 'Cantos, livres e lançamentos — a favor e contra.' }
+    ],
+    listTitle: 'Todas as análises'
+  },
+
   articles: [
     {
       slug: 'o-4-4-2-de-bubista',
@@ -619,28 +758,33 @@ export const seed = {
       date: '[DATA DE PUBLICAÇÃO]',
       cover: img(P.helio, 'Hélio Varela conduz a bola perseguido por um jogador da Arábia Saudita, no Mundial 2026', '60% 42%'),
       coverCaption: 'Hélio Varela contra a Arábia Saudita, Mundial 2026. Foto: Petsbikes · CC BY 4.0',
+      match: 'argentina-cabo-verde-2026',
       body: [
         { type: 'lead', text: 'Há equipas que se definem pelo que fazem com a bola. Cabo Verde, no Mundial 2026, definiu-se pelo que fez sem ela. Contra Espanha, Uruguai, Arábia Saudita e Argentina, o desenho foi sempre o mesmo: duas linhas de quatro, separadas por poucos metros, e dois avançados encarregados de tornar o primeiro passe adversário num problema.' },
-        { type: 'p', text: 'Não é um sistema novo nem pretende sê-lo. O mérito está na disciplina — e na convicção de que, se o espaço entre linhas não existir, o talento do outro lado tem de procurar soluções por fora, onde a equipa está preparada para fechar.' },
-        { type: 'h2', num: '01', text: 'O bloco' },
+        { type: 'p', text: 'Para perceber o plano, dividimos o jogo nos seus cinco momentos: ataque organizado, defesa organizada, transição ofensiva, transição defensiva e bola parada. Em cada um, o quadro ao lado mostra onde está cada jogador.' },
+        { type: 'h2', num: '01', text: 'Ataque', moment: 0 },
+        { type: 'p', text: 'Com bola e com tempo, Cabo Verde não procurou ter a posse muito tempo. A largura vem dos corredores: Ryan Mendes abre na esquerda, Wagner Pina sobe na direita e Kevin Pina fecha para dentro, para atacar a área ao lado dos dois avançados.' },
+        { type: 'p', text: 'É um ataque de poucos toques e muita verticalidade, pensado mais para chegar rápido ao último terço do que para cansar o adversário com a bola. [DADOS A CONFIRMAR: posse média e passes por jogo no Mundial.]' },
+        { type: 'phase', label: 'Ver o ataque no campo', phase: 0 },
+        { type: 'h2', num: '02', text: 'Defesa', moment: 1 },
         { type: 'p', text: 'Sem bola, os médios fecham por dentro e as alas recuam até perto da linha defensiva. É aí que Pico Lopes manda: o central nascido em Dublin organiza a altura da linha e mantém os oito jogadores de campo à distância certa uns dos outros.' },
-        { type: 'p', text: 'O resultado é um bloco médio compacto, que aceita que o adversário tenha a bola em zonas inofensivas e recusa-lhe o corredor central. Foi assim que Espanha ficou a zero na estreia.' },
-        { type: 'phase', label: 'Ver o bloco no campo', phase: 0 },
+        { type: 'p', text: 'A pressão não começa ao acaso. Livramento e Willy Semedo cortam a linha de passe para o pivô adversário. Enquanto a bola circula entre centrais, esperam. Quando segue para a ala, a equipa inteira sobe uns metros e a linha lateral passa a ser um defesa a mais. Foi assim que Espanha ficou a zero na estreia.' },
+        { type: 'phase', label: 'Ver o bloco no campo', phase: 1 },
         { type: 'quote', text: '“Sofrer junto e castigar a primeira hesitação.”', cite: 'O plano, em sete palavras' },
-        { type: 'h2', num: '02', text: 'O gatilho' },
-        { type: 'p', text: 'A pressão não começa ao acaso. Livramento e Willy Semedo posicionam-se para cortar a linha de passe para o pivô adversário. Enquanto a bola circula entre centrais, esperam. Quando segue para a ala, a equipa inteira sobe uns metros e a linha lateral passa a ser um defesa a mais.' },
-        { type: 'p', text: 'É um gatilho simples de explicar e difícil de executar durante noventa minutos: exige que os médios saltem no momento certo e que a defesa acompanhe, para não abrir o espaço que o bloco passou o jogo a negar.' },
-        { type: 'phase', label: 'Ver a pressão no campo', phase: 1 },
-        { type: 'image', photo: img(P.can2021, 'Jogadores de Cabo Verde entram em campo na CAN 2021, nos Camarões', '55% 35%'), caption: 'A base deste grupo vem de longe: a entrada em campo na CAN 2021. Foto: Effathéophile105 · CC BY-SA 4.0' },
-        { type: 'h2', num: '03', text: 'A transição' },
-        { type: 'p', text: 'Recuperada a bola, a regra é não olhar para trás. O primeiro passe procura a vertical e dois homens atacam a área: Deroy Duarte e Kevin Pina, médios de origem, que nestes momentos se transformam em finalizadores. Do lado direito, Wagner Pina sobe e prende o lateral adversário, abrindo o espaço por dentro.' },
+        { type: 'h2', num: '03', text: 'Transição ofensiva', moment: 2 },
+        { type: 'p', text: 'Recuperada a bola, a regra é não olhar para trás. O primeiro passe procura a vertical e dois homens atacam a área: Deroy Duarte e Kevin Pina, médios de origem, que nestes momentos se transformam em finalizadores. Do lado direito, Wagner Pina sobe e prende o lateral adversário.' },
         { type: 'p', text: 'Foi numa destas chegadas que Deroy Duarte marcou à Argentina, aos 59 minutos. A equipa que mal tinha a bola precisou de muito pouco para a transformar em perigo.' },
-        { type: 'phase', label: 'Ver a transição no campo', phase: 2 },
-        { type: 'h2', num: '04', text: 'O banco' },
-        { type: 'p', text: 'Um bloco destes cansa. Por isso a última meia hora é pensada à parte: Garry Rodrigues entra pela experiência e pela calma com bola; Hélio Varela pela velocidade contra defesas já gastas. Contra o Uruguai, foi do banco que veio o empate.' },
-        { type: 'p', text: 'O desenho não muda — muda a energia de quem o executa. É a diferença entre aguentar e continuar a ameaçar.' },
-        { type: 'phase', label: 'Ver a mudança no campo', phase: 3 },
-        { type: 'h2', num: '05', text: 'Miami' },
+        { type: 'phase', label: 'Ver a transição ofensiva no campo', phase: 2 },
+        { type: 'image', photo: img(P.can2021, 'Jogadores de Cabo Verde entram em campo na CAN 2021, nos Camarões', '55% 35%'), caption: 'A base deste grupo vem de longe: a entrada em campo na CAN 2021. Foto: Effathéophile105 · CC BY-SA 4.0' },
+        { type: 'h2', num: '04', text: 'Transição defensiva', moment: 3 },
+        { type: 'p', text: 'Quando perde a bola, a equipa não se atira toda à contrapressão. Os dois médios-centro fecham primeiro o corredor central, as alas recuam a correr e só depois a linha volta a subir. O objetivo é simples: nunca deixar o adversário sair em vantagem pelo meio.' },
+        { type: 'p', text: 'É o momento que mais cansa um bloco destes — e é por isso que a última meia hora é pensada à parte: Garry Rodrigues entra pela calma com bola, Hélio Varela pela velocidade contra defesas já gastas. Contra o Uruguai, foi do banco que veio o empate.' },
+        { type: 'phase', label: 'Ver a reação à perda no campo', phase: 3 },
+        { type: 'h2', num: '05', text: 'Bola parada', moment: 4 },
+        { type: 'p', text: 'Numa equipa que remata pouco em jogo corrido, cada canto e cada livre perto da área valem ouro. O quadro mostra uma organização-tipo para um canto ofensivo, com os centrais a atacar a bola.' },
+        { type: 'p', text: '[A COMPLETAR: quem bate os lances, quem ataca a primeira bola, e golos ou ocasiões de bola parada no Mundial.]' },
+        { type: 'phase', label: 'Ver o canto no campo', phase: 4 },
+        { type: 'h2', num: '—', text: 'Miami' },
         { type: 'p', text: 'Nos 16 avos, em Miami, o plano não mudou nem perante a campeã do mundo. Cabo Verde aguentou, marcou por Deroy Duarte e voltou a marcar no prolongamento, aos 103 minutos, pelo pé de Sidny Lopes Cabral. Acabou 3–2 para a Argentina.' },
         { type: 'p', text: 'Perdeu-se o jogo, não a ideia. Quatro jogos, nenhuma derrota nos noventa minutos, um apuramento à frente do Uruguai. Um 4-4-2 sem segredos — só com linhas juntas e uma faca afiada.' }
       ],
@@ -648,10 +792,41 @@ export const seed = {
       boardKicker: 'Quadro tático',
       board: {
         phases: [
-          { key: 'bloco', label: 'O bloco', title: 'O bloco', caption: 'Duas linhas de quatro, a poucos metros. Pico (em amarelo) dita a altura da linha.', band: true, notes: [], players: roster(ART_POS.bloco, BASE_NAMES, ['PI']) },
-          { key: 'gatilho', label: 'O gatilho', title: 'O gatilho', caption: 'Bola na ala: os avançados (em amarelo) fecham o pivô e a equipa sobe.', band: false, notes: [], players: roster(ART_POS.gatilho, BASE_NAMES, ['LI', 'WS']) },
-          { key: 'transicao', label: 'A transição', title: 'A transição', caption: 'Bola ganha: Deroy Duarte e Kevin Pina atacam a área, Wagner Pina dá largura.', band: false, notes: [], players: roster(ART_POS.transicao, BASE_NAMES, ['DD', 'KP', 'WP']) },
-          { key: 'banco', label: 'O banco', title: 'O banco', caption: 'Última meia hora: Hélio Varela e Garry Rodrigues entram, o desenho fica.', band: true, notes: [], players: roster(ART_POS.banco, BANCO_NAMES, ['HV', 'GR']) }
+          { key: 'ataque', label: 'Ataque', title: 'Ataque', caption: 'Largura nos corredores: Ryan Mendes e Wagner Pina (em amarelo) abrem o campo.', band: false, notes: [], players: roster(ART_POS.ataque, BASE_NAMES, ['RM', 'WP']) },
+          { key: 'defesa', label: 'Defesa', title: 'Defesa', caption: 'Duas linhas de quatro, a poucos metros. Pico (em amarelo) dita a altura da linha.', band: true, notes: [], players: roster(ART_POS.bloco, BASE_NAMES, ['PI']) },
+          { key: 'transof', label: 'Trans. ofensiva', title: 'Transição ofensiva', caption: 'Bola ganha: Deroy Duarte e Kevin Pina atacam a área, Wagner Pina dá largura.', band: false, notes: [], players: roster(ART_POS.transicao, BASE_NAMES, ['DD', 'KP', 'WP']) },
+          { key: 'transdef', label: 'Trans. defensiva', title: 'Transição defensiva', caption: 'Bola perdida: os médios-centro (em amarelo) fecham o meio antes de a linha subir.', band: true, notes: [], players: roster(ART_POS.transdef, BASE_NAMES, ['DD', 'JM']) },
+          { key: 'bolaparada', label: 'Bola parada', title: 'Bola parada', caption: 'Canto ofensivo (esquema ilustrativo): os centrais atacam a bola. [A CONFIRMAR]', band: false, notes: [], players: roster(ART_POS.canto, BASE_NAMES, ['PI', 'DI']) }
+        ]
+      },
+      tactic: {
+        kicker: 'Laboratório tático',
+        title: 'Monta o',
+        titleSerif: 'plano de Bubista.',
+        intro: 'O 4-4-2 de Cabo Verde, peça a peça. Muda de fase e de formação, toca num jogador e mexe nas instruções — o campo reage. "Repor o plano" volta à escolha original.',
+        formation: '4-4-2',
+        team: {
+          posse: { tWidth: 'Normal', tempo: 'Rápido', tPass: 'Misto', saidaGR: 'Mista', attackZone: 'Equilibrado' },
+          transicao: { lost: 'Reagrupar', won: 'Contra-ataque', gkDist: 'Rápida' },
+          sem: { block: 'Médio', line: 'Normal', intensity: 'Normal', trigger: 'Bola na ala', compact: 'Curta' }
+        },
+        notes: {
+          posse: 'Com bola: ataque vertical, largura dada pelos corredores e chegada rápida ao último terço.',
+          transicao: 'Ao perder, reagrupa primeiro; ao ganhar, procura logo o contra-ataque.',
+          sem: 'Sem bola: bloco médio, linhas curtas e pressão quando a bola vai para a ala.'
+        },
+        players: [
+          { pid: 'voz', name: 'Vozinha', ini: 'VO', role: 'gr', apply: 'posicao', attrs: {}, posse: {}, sem: {} },
+          { pid: 'jp', name: 'João Paulo', ini: 'JP', role: 'lateral', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
+          { pid: 'diney', name: 'Diney', ini: 'DI', role: 'central', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
+          { pid: 'pico', name: 'Pico', ini: 'PI', role: 'central-org', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
+          { pid: 'wagner', name: 'W. Pina', ini: 'WP', role: 'lateral-of', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
+          { pid: 'ryan', name: 'Ryan Mendes', ini: 'RM', role: 'medio-ala', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
+          { pid: 'deroy', name: 'Deroy', ini: 'DD', role: 'box', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
+          { pid: 'jamiro', name: 'Jamiro', ini: 'JM', role: 'medio-def', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
+          { pid: 'kevin', name: 'Kevin Pina', ini: 'KP', role: 'ala-interior', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
+          { pid: 'liv', name: 'Livramento', ini: 'DL', role: 'pressao', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
+          { pid: 'willy', name: 'W. Semedo', ini: 'WS', role: 'pressao', apply: 'jogador', attrs: {}, posse: {}, sem: {} }
         ]
       },
       relatedTitle: 'Os homens',
@@ -660,7 +835,7 @@ export const seed = {
         { name: 'Pico Lopes', label: 'O bloco', href: '/plantel', bg: '#0B3B8C', photo: img(P.pico, '', '50% 20%') },
         { name: 'Livramento', label: 'O gatilho', href: '/plantel', bg: '#0B3B8C', photo: img(P.liv, '', '50% 12%') },
         { name: 'Deroy Duarte', label: 'A transição', href: '/plantel', bg: '#0F5A3A', photo: img(P.deroy, '', '52% 20%') },
-        { name: 'Hélio Varela', label: 'O banco', href: '/radar/helio-varela', bg: '#B3261E', photo: img(P.helio, '', '68% 28%') }
+        { name: 'Hélio Varela', label: 'O banco', href: '/rubricas/helio-varela', bg: '#B3261E', photo: img(P.helio, '', '68% 28%') }
       ],
       credits: 'Fotografias via Wikimedia Commons: Petsbikes (CC BY 4.0) · Effathéophile105 (CC BY-SA 4.0) · Irish Football Fan TV (CC BY 3.0) · Biso (CC BY 4.0).'
     }
@@ -693,6 +868,8 @@ export const templates = {
     tags: ['Etiqueta'],
     boardKicker: 'Quadro tático',
     board: clonePhases(),
+    tactic: JSON.parse(JSON.stringify(seed.articles[0].tactic)),
+    match: '',
     relatedTitle: 'Para continuar',
     relatedSerif: 'a ler.',
     related: [],
@@ -733,5 +910,6 @@ export const templates = {
 };
 
 function clonePhases() {
-  return { phases: [{ key: 'f1', label: 'Fase 1', title: 'Fase 1', caption: 'Descrição da fase.', band: true, notes: [], players: roster(ART_POS.bloco, BASE_NAMES, []) }] };
+  const m = (key: string, label: string, pos: number[][], band: boolean) => ({ key, label, title: label, caption: 'Descrição deste momento.', band, notes: [], players: roster(pos, BASE_NAMES, []) });
+  return { phases: [m('ataque', 'Ataque', ART_POS.ataque, false), m('defesa', 'Defesa', ART_POS.bloco, true), m('transof', 'Trans. ofensiva', ART_POS.transicao, false), m('transdef', 'Trans. defensiva', ART_POS.transdef, true), m('bolaparada', 'Bola parada', ART_POS.canto, false)] };
 }

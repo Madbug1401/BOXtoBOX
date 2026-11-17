@@ -197,7 +197,7 @@ export default function RadarPage() {
           <div className="wrap">
             <E as="p" path="rubrica.featuredKicker" className="sr kicker acc" style={{ marginBottom: 28 }} />
             {ed.editing && <ESelect path="rubrica.featured" label="Edição em destaque" options={editions.map((e: any) => [e.slug, `#${e.num} · ${e.name}`])} />}
-            <CardLink className="feat r-feat-card" href={'/radar/' + feat.slug}>
+            <CardLink className="feat r-feat-card" href={'/rubricas/' + feat.slug}>
               <div className="clip-in r-feat-img">
                 <EImg path={`${FP}.photo`} className="cover r-feat-photo" />
                 <span className="big r-feat-num" aria-hidden="true">{feat.num}</span>
@@ -250,7 +250,7 @@ export default function RadarPage() {
           {ed.editing && <span className="e-note">Para criar, apagar ou reordenar edições usa "Conteúdos" na barra do admin. Aqui editas o texto do arquivo.</span>}
           <div className="r-ed-list">
             {list.map(({ e, i }: any, k: number) => (
-              <CardLink key={e.slug} href={'/radar/' + e.slug} className="ed in r-ed" style={{ animationDelay: (k * 0.07).toFixed(2) + 's' }}>
+              <CardLink key={e.slug} href={'/rubricas/' + e.slug} className="ed in r-ed" style={{ animationDelay: (k * 0.07).toFixed(2) + 's' }}>
                 <span className="r-ed-num">#{e.num}</span>
                 <div className="ed-t r-ed-thumb" style={{ background: e.bg }}>
                   <SafeImg src={e.photo?.src} alt="" style={{ objectPosition: e.photo?.pos }} fallback={<span>{e.mono || e.num}</span>} />

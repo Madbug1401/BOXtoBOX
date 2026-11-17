@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { E, EImg, EList, ItemTools, EToggle, ESelect, EColor, HrefLink, useEditor, cx } from '@/components/editor/core';
 import { Header, Footer, Arrow, Pitch } from '@/components/site/ui';
+import { TacticLab } from '@/components/site/TacticLab';
+import { seed } from '@/lib/seed';
 import { NotFoundBlock } from './NotFound';
 
 const BLOCKS: [string, string, any][] = [
@@ -20,7 +22,13 @@ function Block({ b, p, setPhase, phases }: { b: any; p: string; setPhase: (i: nu
     case 'lead':
       return <div className="eitem"><E as="p" path={p + '.text'} className="lead" multiline /><ItemTools /></div>;
     case 'h2':
-      return <h2 className="sr a-h2 eitem"><E path={p + '.num'} className="a-h2-n" /> · <E path={p + '.text'} /><ItemTools /></h2>;
+      return (
+        <h2 className="sr a-h2 eitem" id={b.moment !== undefined && b.moment !== '' ? `momento-${b.moment}` : undefined}>
+          <E path={p + '.num'} className="a-h2-n" /> · <E path={p + '.text'} />
+          {ed.editing && <ESelect path={p + '.moment'} label="Momento" options={[['', '—'], ...phases.map((ph: any, i: number) => [String(i), ph.label] as [string, string])]} />}
+          <ItemTools />
+        </h2>
+      );
     case 'quote':
       return (
         <blockquote className="sr a-quote eitem">
@@ -62,6 +70,15 @@ export default function ArticlePage({ slug }: { slug: string }) {
   const phases = a.board?.phases || [];
   const pi = Math.min(phase, Math.max(0, phases.length - 1));
   const lines = String(a.titleLines || '').split('\n');
+  const seedA: any = seed.articles.find((x: any) => x.slug === a.slug);
+  const tacticFallback = a.tactic ? undefined : seedA?.tactic;
+  const match = a.match ? (ed.content.matches || []).find((m: any) => m.slug === a.match) : null;
+  // Os 5 momentos: títulos ligados a uma fase do quadro.
+  const moments = (a.body || []).filter((b: any) => b.type === 'h2' && b.moment !== undefined && b.moment !== '').map((b: any) => ({ n: b.num, t: b.text, phase: Number(b.moment) }));
+  const goMoment = (m: { phase: number }) => {
+    setPhase(m.phase);
+    document.getElementById(`momento-${m.phase}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <div className="article" style={{ ['--mbase' as any]: '.2s', ['--base' as any]: '.4s' }}>
@@ -87,6 +104,15 @@ export default function ArticlePage({ slug }: { slug: string }) {
             <E as="p" path={P + '.deck'} className="fade a-deck" style={{ ['--i' as any]: 4 }} multiline />
             <p className="fade a-by" style={{ ['--i' as any]: 5 }}>Por <strong><E path={P + '.author'} /></strong><br /><E path={P + '.date'} /></p>
           </div>
+          {match && (
+            <p className="fade a-match" style={{ ['--i' as any]: 6 }}>
+              <span>Jogo analisado</span>
+              <strong>{match.home} {match.hs}–{match.as} {match.away}{match.extra ? ` ${match.extra}` : ''}</strong>
+              <span>{match.comp} · {match.stage}</span>
+              <Link href={'/jogos/' + match.slug}>Ficha do jogo →</Link>
+            </p>
+          )}
+          {ed.editing && <span className="e-note">Jogo analisado: <ESelect path={P + '.match'} label="Jogo" options={[['', '—'], ...(ed.content.matches || []).map((m: any) => [m.slug, `${m.home} ${m.hs}–${m.as} ${m.away}`] as [string, string])]} /></span>}
         </header>
 
         <figure className="reveal ph a-cover">
@@ -96,6 +122,15 @@ export default function ArticlePage({ slug }: { slug: string }) {
 
         <div className="wrap a-bodyrow">
           <div className="prose">
+            {moments.length > 0 && (
+              <nav className="mom-nav" aria-label="Os momentos do jogo">
+                {moments.map((m: any, i: number) => (
+                  <button key={i} type="button" className={cx(m.phase === pi && 'on')} onClick={() => goMoment(m)} aria-pressed={m.phase === pi}>
+                    <span className="mn-n">{m.n}</span><span className="mn-t">{m.t}</span>
+                  </button>
+                ))}
+              </nav>
+            )}
             <EList path={P + '.body'} render={(b, p) => <Block b={b} p={p} setPhase={setPhase} phases={phases} />} />
             {ed.editing && (
               <div className="e-addbar">
@@ -136,6 +171,15 @@ export default function ArticlePage({ slug }: { slug: string }) {
           )}
         </div>
       </article>
+
+      {(a.tactic || tacticFallback) ? (
+        <TacticLab path={P + '.tactic'} fallback={tacticFallback} />
+      ) : ed.editing ? (
+        <div className="wrap"><button type="button" className="e-add" onClick={() => ed.set(P + '.tactic', JSON.parse(JSON.stringify(seed.articles[0].tactic)))}>+ Laboratório tático</button></div>
+      ) : null}
+      {ed.editing && tacticFallback && (
+        <div className="wrap"><button type="button" className="e-add" onClick={() => ed.set(P + '.tactic', JSON.parse(JSON.stringify(tacticFallback)))}>Tornar o laboratório editável neste artigo</button></div>
+      )}
 
       <section aria-labelledby="rel-h" className="a-rel">
         <div className="wrap">
