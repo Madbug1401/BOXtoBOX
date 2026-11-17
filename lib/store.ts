@@ -113,11 +113,44 @@ export type Stored = { content: any; updatedAt: string };
 export async function getSiteContent(): Promise<Stored> {
   try {
     const stored = await getJSON(K.content);
-    if (stored?.content) return { content: mergeDefaults(seed, stored.content), updatedAt: stored.updatedAt };
+    if (stored?.content) return { content: migrate(stored.content, mergeDefaults(seed, stored.content)), updatedAt: stored.updatedAt };
   } catch (e) {
     console.error('[store] leitura falhou, a usar conteúdo inicial', e);
   }
   return { content: clone(seed), updatedAt: '' };
+}
+
+// Migrações do conteúdo guardado.
+// mergeDefaults acrescenta campos novos, mas nas listas ganha sempre o que está guardado
+// (menu, artigos...). Quando o seed muda uma lista de forma que o site precisa, sobe-se
+// seed.version e trata-se aqui. Corre na leitura; a próxima gravação do admin fixa o resultado
+// (e a versão anterior fica no Histórico).
+export function migrate(raw: any, c: any): any {
+  const from = Number(raw?.version) || 1;
+  if (from >= seed.version) return c;
+  if (from < 2) {
+    // Menu reduzido a Home · Jogos · Relvado · Rubricas.
+    c.settings = { ...c.settings, nav: clone(seed.settings.nav) };
+    const seedArts = seed.articles as any[];
+    const arts: any[] = Array.isArray(c.articles) ? c.articles : [];
+    // Análise principal reescrita nos 5 momentos (com quadro e laboratório novos).
+    // Mantém o que o admin já tinha preenchido: capa, autor, data e estado de publicação.
+    const lead = seedArts[0];
+    const i = arts.findIndex((a) => a?.slug === lead.slug);
+    const hasMoments = (a: any) => Array.isArray(a?.body) && a.body.some((b: any) => b?.moment === 4);
+    if (i >= 0 && !hasMoments(arts[i])) {
+      const old = arts[i];
+      const keep: any = {};
+      for (const k of ['published', 'cover', 'coverCaption', 'author', 'date']) if (old[k] !== undefined) keep[k] = old[k];
+      arts[i] = { ...clone(lead), ...keep };
+    }
+    // Artigos que o seed tem e o conteúdo guardado não (ex.: rascunhos das análises).
+    const have = new Set(arts.map((a) => a?.slug));
+    for (const a of seedArts) if (!have.has(a.slug)) arts.push(clone(a));
+    c.articles = arts;
+  }
+  c.version = seed.version;
+  return c;
 }
 
 export class ConflictError extends Error {}

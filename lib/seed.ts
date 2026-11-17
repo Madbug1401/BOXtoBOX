@@ -85,7 +85,7 @@ function withScout<T extends { id: string }>(list: T[]) {
 }
 
 export const seed = {
-  version: 1,
+  version: 2,
 
   settings: {
     siteName: 'BOXtoBOX',
