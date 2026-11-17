@@ -10,7 +10,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: base + '/', lastModified },
     { url: base + '/rubricas', lastModified },
-    { url: base + '/plantel', lastModified },
     { url: base + '/jogos', lastModified },
     { url: base + '/relvado', lastModified },
     ...(content.matches || []).filter((m: any) => m.published).map((m: any) => ({ url: `${base}/jogos/${m.slug}`, lastModified })),

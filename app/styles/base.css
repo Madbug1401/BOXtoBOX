@@ -127,6 +127,18 @@ button { font-family: inherit; }
 .hdr-cta { margin-left: 8px; background: var(--accent); color: var(--navy); font-size: 14px; font-weight: 800; padding: 12px 20px; border-radius: 999px; display: inline-flex; }
 .hdr-light .hdr-cta { background: var(--navy); color: var(--cream); }
 .hdr-light .hdr-cta::before { background: var(--accent); }
+@media (max-width: 720px) {
+  /* Telemóvel: marca + botão numa linha, as 4 secções como separadores iguais por baixo. */
+  .site-header { position: relative; }
+  .hdr-in { position: relative; gap: 6px; padding-top: 12px; padding-bottom: 0; }
+  .brand svg { width: 32px; height: 32px; }
+  .wordmark { font-size: 24px; }
+  .hdr-nav { width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 0 -18px; width: calc(100% + 36px); border-top: 1px solid rgba(127,147,186,.25); }
+  .hdr-nav .nav-item { justify-content: center; }
+  .hdr-nav .ul { justify-content: center; width: 100%; padding: 13px 2px; font-size: 13.5px; }
+  .hdr-nav .ul.is-active { box-shadow: inset 0 -3px 0 currentColor; }
+  .hdr-cta { position: absolute; right: 18px; top: 10px; margin: 0; padding: 9px 14px; font-size: 13px; }
+}
 
 /* ===== Rodapé ===== */
 .site-footer { background: var(--navy3); padding: 72px 0 0; overflow: hidden; color: var(--muted2); }

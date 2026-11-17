@@ -75,8 +75,10 @@ export default function ArticlePage({ slug }: { slug: string }) {
   const match = a.match ? (ed.content.matches || []).find((m: any) => m.slug === a.match) : null;
   // Os 5 momentos: títulos ligados a uma fase do quadro.
   const moments = (a.body || []).filter((b: any) => b.type === 'h2' && b.moment !== undefined && b.moment !== '').map((b: any) => ({ n: b.num, t: b.text, phase: Number(b.moment) }));
+  const syncLab = (i: number) => { const k = phases[i]?.key; if (k) window.dispatchEvent(new CustomEvent('b2b:moment', { detail: k })); };
   const goMoment = (m: { phase: number }) => {
     setPhase(m.phase);
+    syncLab(m.phase);
     document.getElementById(`momento-${m.phase}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
@@ -155,7 +157,7 @@ export default function ArticlePage({ slug }: { slug: string }) {
                 {phases.length > 0 && <Pitch path={P + '.board'} phase={pi} variant="article" />}
                 <div role="group" aria-label="Fase" className="a-tabs">
                   {phases.map((ph: any, i: number) => (
-                    <button key={i} type="button" onClick={() => setPhase(i)} aria-pressed={i === pi} className={cx('a-tab', i === pi && 'on')}><E path={`${P}.board.phases.${i}.label`} /></button>
+                    <button key={i} type="button" onClick={() => { setPhase(i); syncLab(i); }} aria-pressed={i === pi} className={cx('a-tab', i === pi && 'on')}><E path={`${P}.board.phases.${i}.label`} /></button>
                   ))}
                 </div>
                 {phases[pi] && <E as="p" path={`${P}.board.phases.${pi}.caption`} className="a-board-p" />}
@@ -185,7 +187,7 @@ export default function ArticlePage({ slug }: { slug: string }) {
         <div className="wrap">
           <h2 id="rel-h" className="sr display h-md" style={{ marginBottom: 36 }}><E path={P + '.relatedTitle'} /> <E path={P + '.relatedSerif'} className="serif" style={{ color: '#F7D116' }} /></h2>
           <div className="a-rel-grid">
-            <EList path={P + '.related'} newItem={{ name: 'Nome', label: 'Papel', href: '/plantel', bg: '#0B3B8C', photo: { src: '', alt: '', pos: '50% 20%' } }} addLabel="Cartão" render={(r, p) => (
+            <EList path={P + '.related'} newItem={{ name: 'Nome', label: 'Papel', href: '/rubricas#jogadores', bg: '#0B3B8C', photo: { src: '', alt: '', pos: '50% 20%' } }} addLabel="Cartão" render={(r, p) => (
               <HrefLink path={p + '.href'} className="rel sr ph eitem" style={{ background: r.bg }}>
                 <EImg path={p + '.photo'} className="cover" alt="" label=" " />
                 <span className="a-rel-l"><E path={p + '.name'} /><E path={p + '.label'} className="a-rel-s" /></span>

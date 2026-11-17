@@ -127,61 +127,52 @@ export default function HomePage() {
   const relLead = (c.articles || []).find((a: any) => (a.pillar || 'relvado') === 'relvado');
   const relIdx = relLead ? c.articles.indexOf(relLead) : -1;
   const relPhases = relLead?.board?.phases || [];
-  const squad = c.players.filter((p: any) => p.strip);
-  const words = String(c.settings.slogan || '').split(' ');
+  const today = new Date().toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const ticker = ed.editing ? h.ticker : [...h.ticker, ...h.ticker];
   const tags = ed.editing ? h.tags : [...h.tags, ...h.tags];
-  const squadList = ed.editing ? squad : [...squad, ...squad];
 
   return (
     <div className="home" style={{ ['--base' as any]: base, ['--mbase' as any]: base }}>
       {showIntro && <Intro onSkip={() => setIntro(false)} />}
       <Header />
 
-      {/* HERO */}
-      <Sec k="home.hero" label="Destaque" id="top" className="h-hero">
-        <div aria-hidden="true" className="par h-hero-ring"><svg className="spin-slow" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="none" stroke="rgba(255,255,255,.07)" strokeWidth=".25" /><circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,.06)" strokeWidth=".25" strokeDasharray="1 1.6" /></svg></div>
-        <div aria-hidden="true" className="h-hero-lines" />
-        <div className="wrap h-hero-in">
-          <div className="h-hero-text">
-            <p className="fade kicker h-kicker" style={{ ['--i' as any]: 0 }}><span className="h-kbar" /><E path="home.hero.kicker" /></p>
-            <h1 className="display h-title">
-              <span className="mask h-t1" style={{ ['--i' as any]: 0 }}><E path="home.hero.line1" /></span>
-              <span className="mask h-t2" style={{ ['--i' as any]: 1 }}><span><E path="home.hero.line2pre" /> <E path="home.hero.line2serif" className="serif" style={{ color: '#C9D6EE' }} /> <E path="home.hero.line2post" /></span></span>
-              <span className="mask h-t2 acc" style={{ ['--i' as any]: 2 }}><E path="home.hero.line3" /></span>
-            </h1>
-            <E as="p" path="home.hero.lead" className="fade h-lead" style={{ ['--i' as any]: 5 }} multiline />
-            <div className="fade h-ctas" style={{ ['--i' as any]: 6 }}>
-              <ELink path="home.hero.cta1" className="btn pill pill-acc"><Arrow /></ELink>
-              <ELink path="home.hero.cta2" className="btn pill pill-ghost"><Arrow /></ELink>
-            </div>
+      {/* PRIMEIRA PÁGINA: notícias */}
+      <Sec k="home.news" label="Notícias" id="top" aria-labelledby="news-h" className="hf">
+        <div className="wrap">
+          <div className="hf-mast fade" style={{ ['--i' as any]: 0 }}>
+            <E as="p" path="home.news.kicker" className="kicker acc" />
+            <span className="hf-date" suppressHydrationWarning>{today}</span>
+            <nav aria-label="Secções" className="hf-sections">
+              <a href="#jogos-w">Jogos</a><a href="#relvado-w">Relvado</a><a href="#rubricas-w">Rubricas</a>
+            </nav>
           </div>
-          <div className="fade h-hero-art" style={{ ['--i' as any]: 3 }}>
-            <div className="h-ringbox">
-              <div className="spin-mid" aria-hidden="true" style={{ position: 'absolute', inset: 0 }}>
-                {ring(10, 'min(400px, 78vw)', parseFloat(base) + 0.3, 0.06).map((s, i) => (
-                  <div key={i} style={s.style}><Star size={30} fill={accent} className="h-star" style={{ display: 'block', animationDelay: s.delay }} /></div>
-                ))}
-              </div>
-              <div className="ph h-circle"><EImg path="home.hero.photo" alt="" /></div>
-              <div className="h-badge"><E path="home.hero.badgeNum" className="h-badge-n acc" /><E path="home.hero.badgeText" className="serif h-badge-t" /></div>
-            </div>
-          </div>
-        </div>
-        <div className="wrap" style={{ position: 'relative', marginTop: 72 }}>
-          <div className="h-stats">
-            <EList path="home.stats" newItem={{ value: '0', suffix: '', label: 'descrição', accent: false }} addLabel="Número" render={(s, p, i) => (
-              <div className="fade h-stat eitem" style={{ ['--i' as any]: 7 + i }}>
-                <div className="h-stat-n" style={{ color: s.accent ? accent : '#fff' }}><E path={p + '.value'} /><E path={p + '.suffix'} className="serif acc" /></div>
-                <E as="div" path={p + '.label'} className="h-stat-l" />
-                <EToggle path={p + '.accent'} label="cor de destaque" />
+          <h1 id="news-h" className="display hf-title"><span className="mask"><span><E path="home.news.title" /></span></span> <span className="mask" style={{ ['--i' as any]: 1 }}><span><E path="home.news.titleSerif" className="serif acc" /></span></span></h1>
+          <div className="hf-grid">
+            <EList path="home.news.items" newItem={{ kicker: 'Secção', title: 'Título da notícia', text: 'Resumo curto.', href: '/', date: '[DATA]', photo: { src: '', alt: '', pos: '50% 50%', credit: '' } }} addLabel="Notícia" render={(n, p, i) => (
+              <HrefLink path={p + '.href'} className={cx('hf-n sr eitem', i === 0 ? 'hf-lead' : 'hf-item')} style={{ ['--i' as any]: i }}>
+                <span className="hf-img ph">
+                  {n.video?.src ? (
+                    <video src={n.video.src} poster={n.video.poster || undefined} muted loop playsInline autoPlay preload="metadata" aria-label={n.title} />
+                  ) : n.photo?.src || ed.editing ? (
+                    <EImg path={p + '.photo'} className="cover" label=" " />
+                  ) : (
+                    <span className="hf-ph" aria-hidden="true"><Star size={i === 0 ? 64 : 34} fill={accent} /></span>
+                  )}
+                  {n.video?.src && <span className="hf-play" aria-hidden="true">▶ Vídeo</span>}
+                </span>
+                <span className="hf-b">
+                  {i > 0 && <span className="hf-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>}
+                  <E path={p + '.kicker'} className="hf-k" />
+                  <E path={p + '.title'} className="hf-t" />
+                  <E path={p + '.text'} className="hf-p" />
+                  <E path={p + '.date'} className="hf-d" />
+                </span>
                 <ItemTools />
-              </div>
+              </HrefLink>
             )} />
           </div>
         </div>
       </Sec>
-
       {/* MARQUEE */}
       <Sec k="home.ticker" label="Faixas em movimento" as="div" className="h-marq" aria-hidden={ed.editing ? undefined : true}>
         <div className="marq-wrap h-marq-y">
@@ -202,36 +193,8 @@ export default function HomePage() {
         </div>
       </Sec>
 
-      {/* ÚLTIMAS (notícias) */}
-      <Sec k="home.news" label="Últimas" id="ultimas" aria-labelledby="news-h" className="hw-news">
-        <div className="wrap">
-          <div className="sr h-sechead" style={{ marginBottom: 40 }}>
-            <div>
-              <E as="p" path="home.news.kicker" className="kicker acc" style={{ marginBottom: 14 }} />
-              <h2 id="news-h" className="display h-xl" style={{ color: '#fff' }}><E path="home.news.title" /><br /><E path="home.news.titleSerif" className="serif acc" /></h2>
-            </div>
-          </div>
-          <div className="hw-news-grid">
-            <EList path="home.news.items" newItem={{ kicker: 'Secção', title: 'Título da notícia', text: 'Resumo curto.', href: '/', date: '[DATA]', photo: { src: '', alt: '', pos: '50% 50%', credit: '' } }} addLabel="Notícia" render={(n, p, i) => (
-              <HrefLink path={p + '.href'} className={cx('hw-n sr eitem', i === 0 && 'hw-n-lead')}>
-                <span className="hw-n-img ph">
-                  {n.photo?.src || ed.editing ? <EImg path={p + '.photo'} className="cover" label=" " /> : <span className="hw-n-ph" aria-hidden="true"><Star size={44} fill={accent} /></span>}
-                </span>
-                <span className="hw-n-b">
-                  <E path={p + '.kicker'} className="hw-n-k" />
-                  <E path={p + '.title'} className="hw-n-t" />
-                  <E path={p + '.text'} className="hw-n-p" />
-                  <E path={p + '.date'} className="hw-n-d" />
-                </span>
-                <ItemTools />
-              </HrefLink>
-            )} />
-          </div>
-        </div>
-      </Sec>
-
       {/* JOGOS (resumo) */}
-      <Sec k="home.gamesW" label="Jogos" aria-labelledby="gw-h" className="hw-games">
+      <Sec k="home.gamesW" label="Jogos" id="jogos-w" aria-labelledby="gw-h" className="hw-games">
         <div className="wrap">
           <div className="sr h-sechead" style={{ marginBottom: 36 }}>
             <div>
@@ -273,7 +236,7 @@ export default function HomePage() {
 
       {/* RELVADO (resumo) */}
       {relLead && (
-        <Sec k="home.relvadoW" label="Relvado" aria-labelledby="rw-h" className="hw-rel">
+        <Sec k="home.relvadoW" label="Relvado" id="relvado-w" aria-labelledby="rw-h" className="hw-rel">
           <div className="wrap hw-rel-in">
             <div className="hw-rel-text">
               <E as="p" path="home.relvadoW.kicker" className="sr kicker acc" style={{ marginBottom: 14 }} />
@@ -297,84 +260,8 @@ export default function HomePage() {
         </Sec>
       )}
 
-      {/* VÍDEO */}
-      <Sec k="home.video" label="Vídeo" id="video" aria-labelledby="vid-h" className="h-video">
-        <div aria-hidden="true" className="h-video-big">{h.video.bigWord}</div>
-        <div className="wrap h-video-in">
-          <div className="sr h-video-text">
-            <p className="kicker h-video-k"><span className="h-dot" /><E path="home.video.kicker" /></p>
-            <h2 id="vid-h" className="display h-video-t"><E path="home.video.title" /><br /><E path="home.video.titleSerif" className="serif" /></h2>
-            <E as="p" path="home.video.text" className="h-video-p" multiline />
-            <E as="p" path="home.video.credit" className="h-video-c" />
-            {ed.editing && <span className="e-note">Palavra de fundo: <E path="home.video.bigWord" /></span>}
-          </div>
-          <div className="sr h-phone-wrap">
-            <div className="tile h-phone"><EVideo path="home.video.video" className="h-phone-v" /></div>
-          </div>
-          <figure className="sr h-video-fig">
-            <div className="tile ph h-polaroid"><EImg path="home.video.photo" /></div>
-            <figcaption><strong><E path="home.video.captionStrong" /></strong> <E path="home.video.caption" /></figcaption>
-          </figure>
-        </div>
-      </Sec>
-
-      {/* MANIFESTO */}
-      <Sec k="home.manifesto" label="Manifesto" id="sobre" aria-labelledby="sobre-h" className="h-man">
-        <div aria-hidden="true" className="par h-man-big">{h.manifesto.bigWord}</div>
-        <div className="wrap" style={{ position: 'relative' }}>
-          <E as="p" path="home.manifesto.kicker" className="sr kicker" style={{ color: 'var(--red)', marginBottom: 28 }} />
-          <h2 id="sobre-h" className="display h-man-slogan">
-            {words.map((w, i) => {
-              const a = 4 + i * (36 / words.length);
-              return <span key={i} className="word" style={{ animationRange: `cover ${a.toFixed(1)}% cover ${(a + 14).toFixed(1)}%`, color: i === words.length - 1 ? 'var(--red)' : undefined } as any}>{w}</span>;
-            })}
-          </h2>
-          {ed.editing && <span className="e-note">O slogan muda-se em Definições.</span>}
-          <div className="h-man-cols">
-            <E as="p" path="home.manifesto.lead" className="sr h-man-lead" multiline />
-            <E as="p" path="home.manifesto.text" className="sr h-man-text" multiline />
-            <div className="sr h-man-seal" aria-hidden={ed.editing ? undefined : true}>
-              <svg className="spin-mid" viewBox="0 0 200 200"><defs><path id="ringp" d="M100,100 m-84,0 a84,84 0 1,1 168,0 a84,84 0 1,1 -168,0" /></defs><text fill="#061633" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 800, fontSize: 17, letterSpacing: 3.6 }}><textPath href="#ringp">{h.manifesto.ringText}</textPath></text></svg>
-              <div className="h-man-seal-img"><EImg path="home.manifesto.photo" alt="" /></div>
-            </div>
-          </div>
-          {ed.editing && <span className="e-note">Texto circular: <E path="home.manifesto.ringText" /> · Palavra de fundo: <E path="home.manifesto.bigWord" /></span>}
-          <div className="h-pillars">
-            <EList path="home.manifesto.pillars" newItem={{ num: '04', name: 'Novo', text: 'Descrição.', href: '/', color: '#0B3B8C' }} addLabel="Pilar" render={(pp, p) => (
-              <HrefLink path={p + '.href'} className="pill-row sr-l eitem" style={{ ['--c' as any]: pp.color }}>
-                <E path={p + '.num'} className="pr-n" />
-                <E path={p + '.name'} className="pn pr-name" />
-                <E path={p + '.text'} className="pr-t" />
-                <svg className="pa" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" style={{ transform: 'rotate(-45deg)' }}><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-                <EColor path={p + '.color'} />
-                <ItemTools />
-              </HrefLink>
-            )} />
-          </div>
-        </div>
-      </Sec>
-
-      {/* PLANTEL (faixa) */}
-      <Sec k="home.squad" label="Faixa do plantel" aria-labelledby="sq-h" className="h-squad">
-        <div className="wrap sr h-sechead" style={{ marginBottom: 36 }}>
-          <h2 id="sq-h" className="display h-lg" style={{ color: '#fff' }}><E path="home.squad.title" /><br /><E path="home.squad.titleSerif" className="serif acc" /></h2>
-          <ELink path="home.squad.cta" className="btn pill pill-acc" style={{ padding: '16px 24px' }}><Arrow /></ELink>
-        </div>
-        {ed.editing && <div className="wrap"><span className="e-note">Os jogadores desta faixa editam-se na página Plantel (opção "na faixa da homepage").</span></div>}
-        <div className="marq-wrap">
-          <div className="marq h-squad-in" style={{ animationDuration: '55s' }}>
-            {squadList.map((s: any, i: number) => (
-              <Link key={i} className="tile h-card" href="/plantel">
-                {s.photo?.src ? <SafeImg src={s.photo.src} alt={s.name} className="cover" style={{ objectPosition: s.photo.pos }} /> : null}
-                <span className="h-card-l">{s.name}<span className="acc">{c.plantel.posNames[s.pos] || s.pos}{s.captain ? ' · Capitão' : ''}</span></span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </Sec>
-
       {/* RADAR */}
-      <Sec k="home.radar" label="Radar" id="radar" aria-labelledby="radar-h" className="h-radar">
+      <Sec k="home.radar" label="Rubricas" id="rubricas-w" aria-labelledby="radar-h" className="h-radar">
         <div className="wrap">
           <div className="sr h-sechead" style={{ marginBottom: 56 }}>
             <div>
@@ -414,71 +301,6 @@ export default function HomePage() {
                   </div>
                   <ItemTools />
                 </HrefLink>
-              )} />
-            </div>
-          </div>
-        </div>
-      </Sec>
-
-      {/* HISTÓRIA */}
-      <Sec k="home.history" label="História" id="historia" aria-labelledby="hist-h" className="h-hist">
-        <div className="wrap">
-          <E as="p" path="home.history.kicker" className="sr kicker acc" style={{ marginBottom: 14 }} />
-          <h2 id="hist-h" className="sr display h-xl" style={{ color: '#fff', marginBottom: 72 }}><E path="home.history.title" /><br /><E path="home.history.titleSerif" className="serif acc" /></h2>
-          <div className="h-hist-photos">
-            <EList path="home.history.photos" newItem={{ photo: { src: '', alt: '', pos: '50% 50%', credit: '' }, caption: 'Legenda.' }} addLabel="Foto" render={(_f, p, i) => (
-              <figure className={cx('ph clip-in eitem', i === 0 ? 'h-hist-a' : 'h-hist-b')}>
-                <EImg path={p + '.photo'} />
-                <E as="figcaption" path={p + '.caption'} className={i === 0 ? 'h-hist-cap' : 'h-hist-cap h-hist-cap-y'} />
-                <E path={p + '.photo.credit'} className="credit" />
-                <ItemTools />
-              </figure>
-            )} />
-          </div>
-          <div style={{ position: 'relative' }}>
-            <div aria-hidden="true" className="h-tl-base" />
-            <div className="grow h-tl-fill" aria-hidden="true" />
-            <div className="h-tl">
-              <EList path="home.history.timeline" newItem={{ y: 'Ano', d: 'Acontecimento.', dot: '#ffffff' }} addLabel="Marco" render={(e, p) => (
-                <div className="tl sr h-tl-item eitem">
-                  <div className="dot" aria-hidden="true" style={{ background: e.dot }} />
-                  <E as="div" path={p + '.y'} className="yr" />
-                  <E as="p" path={p + '.d'} className="h-tl-d" />
-                  <EColor path={p + '.dot'} label="Ponto" />
-                  <ItemTools />
-                </div>
-              )} />
-            </div>
-          </div>
-        </div>
-      </Sec>
-
-      {/* DIÁSPORA */}
-      <Sec k="home.diaspora" label="Diáspora" id="diaspora" aria-labelledby="dia-h" className="h-dia">
-        <div className="wrap h-dia-in">
-          <div className="sr h-dia-text">
-            <figure className="ph h-dia-fig"><EImg path="home.diaspora.photo" /><E path="home.diaspora.photo.credit" className="credit" /></figure>
-            <E as="p" path="home.diaspora.kicker" className="kicker acc" style={{ marginBottom: 14 }} />
-            <h2 id="dia-h" className="display h-dia-t"><E path="home.diaspora.titlePre" /> <E path="home.diaspora.titleSerif" className="serif" style={{ color: 'var(--muted)' }} /> <E path="home.diaspora.titlePost" /></h2>
-            <E as="p" path="home.diaspora.text" className="h-dia-p" multiline />
-            <div className="h-chips">
-              <EList path="home.diaspora.countries" newItem="País" addLabel="País" render={(_x, p) => <span className="chip-o eitem"><E path={p} /><ItemTools noDup /></span>} />
-            </div>
-            <ELink path="home.diaspora.link" className="ul ul0 lnk" style={{ display: 'inline-flex', marginTop: 26 }} />
-          </div>
-          <div className="h-dia-ig">
-            <div className="sr h-dia-ighead">
-              <span className="h-dia-iglabel"><E path="home.diaspora.igLabel" /> {rich(c.settings.instagram)}</span>
-              <ELink path="home.diaspora.igLink" className="ul ul0 lnk" style={{ fontSize: 14 }} />
-            </div>
-            <div className="h-posts">
-              <EList path="home.diaspora.posts" newItem={{ kicker: 'Tipo', title: 'Título do post', bg: '#0B3B8C', fg: '#ffffff' }} addLabel="Post" render={(po, p, i) => (
-                <div className="tile sr h-post eitem" style={{ background: po.bg, color: po.fg, marginTop: i % 3 === 1 ? 36 : 0 }}>
-                  <E path={p + '.kicker'} className="h-post-k" />
-                  <E path={p + '.title'} className="h-post-t" />
-                  <span style={{ display: 'flex', flexWrap: 'wrap' }}><EColor path={p + '.bg'} label="Fundo" /><EColor path={p + '.fg'} label="Texto" /></span>
-                  <ItemTools />
-                </div>
               )} />
             </div>
           </div>

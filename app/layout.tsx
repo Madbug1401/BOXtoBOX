@@ -12,6 +12,8 @@ import './styles/edition.css';
 import './styles/plantel.css';
 import './styles/tactic.css';
 import './styles/jogos.css';
+import './styles/stats.css';
+import './styles/players.css';
 import './styles/admin.css';
 
 export const dynamic = 'force-dynamic';

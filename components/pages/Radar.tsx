@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { E, ELink, EImg, EList, ItemTools, EColor, ESelect, Sec, HrefLink, CardLink, useEditor, SafeImg, cx, rich } from '@/components/editor/core';
 import { Header, Footer, Arrow, Star, submitForm } from '@/components/site/ui';
+import { withScoutFallback } from '@/lib/tactics';
+import { seed } from '@/lib/seed';
 
 function Suggest() {
   const ed = useEditor();
@@ -64,6 +66,62 @@ function Suggest() {
         </div>
       </div>
     </Sec>
+  );
+}
+
+const GROUPS: [string, string][] = [['all', 'Todos'], ['gr', 'Baliza'], ['def', 'Defesa'], ['med', 'Meio-campo'], ['av', 'Ataque']];
+const POS_LABEL: Record<string, string> = { gr: 'Guarda-redes', def: 'Defesa', med: 'Médio', av: 'Avançado' };
+
+/** Todos os jogadores do plantel, cada um com a sua ficha e a ligação à rubrica (quando já existe). */
+function Players() {
+  const ed = useEditor();
+  const c = ed.content;
+  const [g, setG] = useState('all');
+  const players: any[] = withScoutFallback(c.players || [], seed.players).filter((p: any) => g === 'all' || p.pos === g);
+  const edition = (slug: string) => (c.editions || []).find((e: any) => e.slug === slug && (e.published || ed.editing));
+  const best = (p: any) => Object.entries(p.attrs || {}).map(([k, v]) => [k, parseFloat(String(v))] as [string, number]).filter(([, v]) => isFinite(v) && v > 0).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  return (
+    <section className="r-pl" id="jogadores" aria-labelledby="rpl-h">
+      <div className="wrap">
+        <div className="r-pl-h">
+          <div>
+            <p className="kicker acc" style={{ marginBottom: 14 }}>O plantel · {(c.players || []).length} jogadores</p>
+            <h2 id="rpl-h" className="display h-xl">Os <span className="serif acc">jogadores.</span></h2>
+          </div>
+          <div role="group" aria-label="Filtrar por setor" className="mt-chips">
+            {GROUPS.map(([k, l]) => <button key={k} type="button" aria-pressed={g === k} className={cx('mt-chip', g === k && 'on')} onClick={() => setG(k)}>{l}</button>)}
+          </div>
+        </div>
+        {ed.editing && <span className="e-note">Os jogadores editam-se na página /plantel (só o admin a vê). Os atributos editam-se no laboratório tático do Relvado.</span>}
+        <ul className="r-pl-grid">
+          {players.map((p) => {
+            const e = p.radar ? edition(p.radar) : null;
+            const attrs = best(p);
+            const body = (
+              <>
+                <span className="r-pl-img" style={{ background: e?.bg || '#0B3B8C' }}>
+                  {p.photo?.src ? <SafeImg src={p.photo.src} alt="" style={{ objectPosition: p.photo.pos }} /> : <span className="r-pl-ini" aria-hidden="true">{p.ini}</span>}
+                  {p.num && <span className="r-pl-num">{p.num}</span>}
+                  {p.captain && <span className="r-pl-cap">Capitão</span>}
+                </span>
+                <span className="r-pl-b">
+                  <span className="r-pl-pos">{(p.positions || []).join(' · ') || POS_LABEL[p.pos]}</span>
+                  <strong className="r-pl-name">{p.name}</strong>
+                  <span className="r-pl-tag">{p.tag}</span>
+                  {attrs.length > 0 && (
+                    <span className="r-pl-attrs" aria-label={'Melhores atributos: ' + attrs.map(([k, v]) => `${k} ${v}`).join(', ')}>
+                      {attrs.map(([k, v]) => <span key={k}><i style={{ transform: `scaleX(${v / 20})` }} /><em>{k}</em><b>{v}</b></span>)}
+                    </span>
+                  )}
+                  <span className={cx('r-pl-go', !e && 'off')}>{e ? <>Ler a rubrica <Arrow size={14} /></> : 'Rubrica em breve'}</span>
+                </span>
+              </>
+            );
+            return <li key={p.id}>{e ? <Link href={'/rubricas/' + e.slug} className="r-pl-card is-link">{body}</Link> : <div className="r-pl-card">{body}</div>}</li>;
+          })}
+        </ul>
+      </div>
+    </section>
   );
 }
 
@@ -265,6 +323,8 @@ export default function RadarPage() {
           </div>
         </div>
       </Sec>
+
+      <Players />
 
       {/* GALERIA */}
       <Sec k="radar.gallery" label="Galeria" aria-labelledby="gal-h" className="r-gal">

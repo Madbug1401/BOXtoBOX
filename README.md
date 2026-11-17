@@ -8,12 +8,31 @@ Feito com Next.js 16 (App Router), pronto para a Vercel.
 
 | Endereço | Página |
 |---|---|
-| `/` | Homepage (abertura animada, campanha, vídeo, manifesto, tática, plantel, radar, história, diáspora, newsletter) |
-| `/radar` | Rubrica Radar (arquivo, galeria, sugestões) |
-| `/radar/[slug]` | Cada edição do Radar, em formato de jornal |
-| `/artigos/[slug]` | Artigos (ex.: `/artigos/o-4-4-2-de-bubista`, com quadro tático interativo) |
-| `/plantel` | Plantel: onze no campo, banco e grelha com fichas |
+O menu tem quatro secções: **Home · Jogos · Relvado · Rubricas**.
+
+| Endereço | Página |
+|---|---|
+| `/` | Home: notícias em primeira página (com vídeo), e um resumo de Jogos, Relvado e Rubricas; newsletter |
+| `/jogos` | Calendário da seleção (filtros por prova e estado) e estatística calculada: forma, médias, marcadores, golos por jogo e por período, balanço por competição |
+| `/jogos/[slug]` | Ficha de cada jogo: golos, estatística, onze e ligação à análise |
+| `/relvado` | Lista das análises e os 5 momentos do jogo |
+| `/relvado/[slug]` | Análise de um jogo nos 5 momentos (ataque, defesa, transição ofensiva, transição defensiva, bola parada), com quadro tático e **laboratório tático** ao estilo dos simuladores de treinador |
+| `/rubricas` | Rubricas dos jogadores (Radar): edição em destaque, arquivo, **todos os jogadores** com ficha (`#jogadores`), galeria e sugestões |
+| `/rubricas/[slug]` | Cada rubrica, em formato de jornal |
+| `/plantel` | Só para o admin (editar as fichas dos jogadores); os visitantes vão para `/rubricas#jogadores` |
 | `/admin` | Entrada do modo admin |
+
+### Laboratório tático (Relvado)
+
+Motor em `lib/tactics.ts`, interface em `components/site/TacticLab.tsx`:
+
+- 3 táticas (a 1.ª é o plano publicado; a 2.ª e a 3.ª ficam guardadas no browser do visitante), 11 formações, familiaridade e intensidade, desfazer com histórico, repor, partilhar por ligação (`#tatica=…`).
+- Estilo tático, mentalidade, fluidez; instruções de equipa por momento.
+- Jogadores: 37 funções com dever (Defesa/Apoio/Ataque), instruções individuais (com bola, sem bola, transições) bloqueadas ou alteradas, adequação à posição, capacidade na função (estrelas) e radar de atributos.
+- Arrastar para trocar posições ou meter suplentes; vistas Funções / Adequação / Movimentos.
+- Bola parada: canto ofensivo, livre lateral e canto defensivo, com batedor, entrega e tarefa de cada jogador.
+- Análise automática (pontos fortes / a vigiar) e perfil da tática.
+- No admin, "Gravar no artigo" publica o plano da tática 1. Os atributos (1–20) são uma avaliação editorial e editam-se na janela do jogador com o modo edição ligado.
 
 ---
 

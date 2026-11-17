@@ -135,7 +135,7 @@ export default function MatchPage({ slug }: { slug: string }) {
               })}
             </div>
             <E as="p" path="jogos.lineupNote" className="ms-note" />
-            <Link href="/plantel" className="ul ul0 lnk" style={{ display: 'inline-flex', marginTop: 16 }}>Ver o plantel <Arrow size={16} /></Link>
+            <Link href="/rubricas#jogadores" className="ul ul0 lnk" style={{ display: 'inline-flex', marginTop: 16 }}>Ver os jogadores <Arrow size={16} /></Link>
           </div>
         </div>
       </section>

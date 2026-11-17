@@ -23,9 +23,10 @@ export default function EditionPage({ slug }: { slug: string }) {
         <div className="sheet ed-brand-in">
           <Link href="/rubricas" className="ed-brand-a"><E path="edicao.back" /></Link>
           <nav aria-label="Secções" className="ed-brand-nav">
-            <Link href="/">Início</Link>
-            {c.articles[0] && <Link href={'/relvado/' + c.articles[0].slug}>Análise</Link>}
-            <Link href="/plantel">Plantel</Link>
+            <Link href="/">Home</Link>
+            <Link href="/jogos">Jogos</Link>
+            <Link href="/relvado">Relvado</Link>
+            <Link href="/rubricas#jogadores">Jogadores</Link>
           </nav>
           <E path="edicao.demoBadge" className="ed-demo" />
         </div>

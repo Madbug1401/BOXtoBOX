@@ -57,6 +57,33 @@ const ART_POS = {
   banco: [[38, 18], [62, 18], [16, 44], [39, 50], [61, 50], [84, 44], [16, 72], [39, 76], [61, 76], [84, 72], [50, 92]]
 };
 
+/** Posições naturais e avaliação BOXtoBOX (1–20) por atributo — estimativas editoriais, editáveis no admin. */
+const ATTR_KEYS = ['Passe', 'Técnica', 'Drible', 'Finalização', 'Cabeceamento', 'Desarme', 'Posicionamento', 'Decisões', 'Trabalho de equipa', 'Aceleração', 'Força', 'Resistência', 'Reflexos'];
+const SCOUT: Record<string, [string[], number[]]> = {
+  voz: [['GR'], [11, 9, 5, 3, 8, 7, 15, 15, 13, 9, 13, 10, 16]],
+  jp: [['DE'], [12, 12, 11, 6, 10, 13, 12, 12, 14, 14, 12, 15, 0]],
+  diney: [['DC'], [11, 10, 7, 5, 15, 15, 14, 13, 13, 11, 15, 13, 0]],
+  pico: [['DC'], [12, 11, 7, 6, 15, 15, 15, 14, 14, 12, 15, 13, 0]],
+  wagner: [['DD', 'ALD'], [12, 12, 13, 6, 9, 12, 11, 12, 14, 15, 11, 16, 0]],
+  ryan: [['ME', 'EE'], [14, 14, 14, 12, 10, 10, 12, 14, 14, 13, 11, 13, 0]],
+  deroy: [['MC', 'MCO'], [14, 14, 13, 12, 10, 11, 12, 13, 15, 13, 12, 15, 0]],
+  jamiro: [['MC', 'MDC'], [15, 14, 12, 10, 9, 12, 13, 14, 14, 11, 11, 14, 0]],
+  kevin: [['MD', 'MC', 'ED'], [13, 14, 14, 13, 9, 10, 11, 13, 13, 14, 10, 15, 0]],
+  liv: [['PL', 'EE'], [11, 13, 13, 14, 11, 6, 13, 12, 13, 16, 12, 14, 0]],
+  willy: [['PL', 'ED'], [11, 13, 13, 13, 12, 7, 13, 12, 15, 14, 13, 15, 0]],
+  helio: [['PL', 'ED'], [10, 13, 14, 14, 10, 5, 12, 11, 11, 16, 11, 12, 0]],
+  sidny: [['PL'], [10, 12, 11, 14, 12, 5, 14, 12, 11, 13, 13, 12, 0]],
+  garry: [['EE', 'ED', 'MCO'], [13, 15, 14, 13, 9, 6, 11, 14, 12, 12, 11, 11, 0]]
+};
+function withScout<T extends { id: string }>(list: T[]) {
+  return list.map((p) => {
+    const s = SCOUT[p.id];
+    const attrs: Record<string, string> = {};
+    if (s) ATTR_KEYS.forEach((k, i) => { attrs[k] = s[1][i] ? String(s[1][i]) : ''; });
+    return { ...p, positions: s ? s[0] : [], attrs };
+  });
+}
+
 export const seed = {
   version: 1,
 
@@ -86,14 +113,15 @@ export const seed = {
 
   home: {
     news: {
-      kicker: 'Últimas',
-      title: 'O que há de novo',
-      titleSerif: 'na revista.',
+      kicker: 'Últimas · Seleção de Cabo Verde',
+      title: 'Notícias',
+      titleSerif: 'da semana.',
+      moreLabel: 'Mais notícias',
       items: [
         { kicker: 'Relvado · Análise', title: 'O 4-4-2 de Bubista: linhas juntas, faca afiada', text: 'Os cinco momentos do jogo de Cabo Verde no Mundial, do bloco médio à bola parada.', href: '/relvado/o-4-4-2-de-bubista', date: '[DATA]', photo: img(P.helio, 'Hélio Varela conduz a bola no Mundial 2026', '60% 40%', 'Petsbikes · CC BY 4.0') },
         { kicker: 'Rubricas · Radar #04', title: 'Pico Lopes: do LinkedIn ao Mundial', text: 'O central nascido em Dublin que organiza a defesa dos Tubarões Azuis.', href: '/rubricas/pico-lopes', date: '[DATA]', photo: img(P.pico, 'Roberto Pico Lopes', '50% 20%', 'Irish Football Fan TV · CC BY 3.0') },
         { kicker: 'Jogos · 16 avos', title: 'Argentina 3–2 Cabo Verde: a campeã sofreu até ao fim', text: "Deroy Duarte aos 59' e Sidny Lopes Cabral aos 103'. Ficha, golos e estatística do jogo.", href: '/jogos/argentina-cabo-verde-2026', date: '[DATA]', photo: img(P.festaGolo, 'Dois jogadores de Cabo Verde abraçam-se a festejar um golo', '50% 30%', '[FCF — confirmar]') },
-        { kicker: 'Vídeo · Seleção', title: 'Ao terceiro jogo, Ayoni dos Santos marcou o primeiro golo', text: 'São 19 segundos — vê-os com som.', href: '/#video', date: '[DATA]', photo: img('', '') },
+        { kicker: 'Vídeo · Seleção', title: 'Ao terceiro jogo, Ayoni dos Santos marcou o primeiro golo', text: 'São 19 segundos — vê-os com som.', href: '/jogos', date: '[DATA]', photo: img('', ''), video: { src: P.video, poster: '' } },
         { kicker: 'Jogos · Houston', title: '68.278 no estádio para ver Cabo Verde e a Arábia Saudita', text: 'O 0–0 que deixou uma equipa inteira no relvado à espera do Espanha–Uruguai.', href: '/jogos/cabo-verde-arabia-saudita-2026', date: '[DATA]', photo: img('', '') }
       ]
     },
@@ -137,7 +165,7 @@ export const seed = {
       { value: '103', suffix: "'", label: 'o golaço de Sidny Lopes Cabral', accent: false }
     ],
     ticker: ['Espanha 0–0 Cabo Verde', 'Uruguai 2–2 Cabo Verde', 'Cabo Verde 0–0 Arábia Saudita', 'Argentina 3–2 Cabo Verde a.p.', '68.278 em Houston', "103' Lopes Cabral"],
-    tags: ['Relvado', 'Pessoas', 'Raízes', 'Diáspora', 'Tática', 'Radar', 'Mundial 2026', 'Tubarões Azuis'],
+    tags: ['Notícias', 'Jogos', 'Relvado', 'Rubricas', 'Calendário', 'Estatística', 'Mundial 2026', 'Tubarões Azuis'],
     campaign: {
       kicker: 'Grupo H → 16 avos',
       title: 'A campanha,',
@@ -225,14 +253,14 @@ export const seed = {
     squad: {
       title: 'Os Tubarões',
       titleSerif: 'de perto.',
-      cta: { label: 'Ver o plantel completo', href: '/plantel' }
+      cta: { label: 'Ver todos os jogadores', href: '/rubricas#jogadores' }
     },
     radar: {
-      kicker: 'Pessoas · Rubrica Radar',
-      title: 'Os nomes que',
-      titleSerif: 'ninguém te contou.',
-      text: 'Toda a gente conhece o Vozinha. Nós falamos dos outros — os que fizeram o Mundial acontecer sem aparecer no resumo.',
-      cta: { label: 'Abrir a rubrica', href: '/rubricas' },
+      kicker: 'Rubricas · Jogadores',
+      title: 'Um jogador',
+      titleSerif: 'de cada vez.',
+      text: 'A rubrica Radar conta, edição a edição, a história de um jogador dos Tubarões Azuis — de onde vem, como joga e o que fez no Mundial.',
+      cta: { label: 'Abrir as rubricas', href: '/rubricas' },
       lead: {
         photo: img(P.pico, 'Roberto Pico Lopes', '50% 22%', 'Foto: Irish Football Fan TV · CC BY 3.0'),
         big: 'DEF',
@@ -289,7 +317,7 @@ export const seed = {
     }
   },
 
-  players: [
+  players: withScout([
     { id: 'voz', name: 'Vozinha', short: 'Vozinha', ini: 'VO', pos: 'gr', num: '1', captain: false, xi: [50, 91], strip: true, photo: img(P.vozinha, 'Vozinha', '50% 16%', 'Petsbikes · CC BY 4.0'), face: [47, 24, 1.9], tag: 'O rosto mais conhecido da seleção.', bio: 'Guarda-redes dos Tubarões Azuis no primeiro Mundial da história. Uma baliza que só caiu no prolongamento frente à campeã do mundo.', club: '[CLUBE]', radar: '' },
     { id: 'jp', name: 'João Paulo', short: 'João Paulo', ini: 'JP', pos: 'def', num: '', captain: false, xi: [15, 71], strip: false, photo: img('', 'João Paulo'), face: [50, 30, 1], tag: 'Lateral esquerdo do onze base.', bio: 'Titular no lado esquerdo da defesa no onze que empatou com a Arábia Saudita em Houston.', club: '[CLUBE]', radar: '' },
     { id: 'diney', name: 'Diney', short: 'Diney', ini: 'DI', pos: 'def', num: '', captain: false, xi: [38, 76], strip: false, photo: img('', 'Diney'), face: [50, 30, 1], tag: 'Central ao lado de Pico.', bio: 'A outra metade da dupla de centrais no 4-4-2 de Bubista.', club: '[CLUBE]', radar: '' },
@@ -304,7 +332,7 @@ export const seed = {
     { id: 'helio', name: 'Hélio Varela', short: 'Hélio', ini: 'HV', pos: 'av', num: '26', captain: false, xi: null, strip: true, photo: img(P.helio, 'Hélio Varela', '68% 28%', 'Petsbikes · CC BY 4.0'), face: [72, 26, 3], tag: 'Super-suplente.', bio: 'Saiu do banco para empatar com o Uruguai. A arma de velocidade que Bubista guarda para a última meia hora.', club: '[CLUBE]', radar: 'helio-varela' },
     { id: 'sidny', name: 'Sidny Lopes Cabral', short: 'Sidny', ini: 'SC', pos: 'av', num: '13', captain: false, xi: null, strip: false, photo: img('', 'Sidny Lopes Cabral'), face: [50, 30, 1], tag: "103' contra a Argentina.", bio: 'Pôs a bola onde o Dibu Martínez não chegava e fez Miami calar no prolongamento.', club: '[CLUBE]', radar: 'sidny-lopes-cabral' },
     { id: 'garry', name: 'Garry Rodrigues', short: 'Garry', ini: 'GR', pos: 'av', num: '', captain: false, xi: null, strip: true, photo: img(P.garry, 'Garry Rodrigues', '45% 30%', 'senolsengul/Pixabay · CC0'), face: [47, 30, 2.4], tag: 'A experiência do banco.', bio: 'Entra para segurar a bola e dar calma quando o jogo aperta.', club: '[CLUBE]', radar: '' }
-  ],
+  ]),
 
   plantel: {
     heroPhoto: img(P.can2021, '', '60% 35%'),
@@ -337,7 +365,7 @@ export const seed = {
   },
 
   rubrica: {
-    kicker: 'Rubrica · Pessoas',
+    kicker: 'Rubricas · Jogadores',
     schedule: 'Todas as semanas · [DIA DA SEMANA]',
     editionLabel: 'Edição n.º 04',
     title: 'Radar',
@@ -349,11 +377,11 @@ export const seed = {
     stripLabel: 'Na mira do Radar',
     stripHint: 'Passa o rato para ver a cor',
     rulesKicker: 'Como funciona',
-    rulesTitle: 'Toda a gente conhece o Vozinha. O Radar existe para os outros.',
+    rulesTitle: 'Toda a gente conhece o Vozinha. O Radar conta os outros vinte e cinco.',
     rules: [
-      { n: '01', t: 'Um nome por edição', d: 'Uma pessoa, contada a fundo. Nada de listas, nada de resumos.' },
-      { n: '02', t: 'Nunca quem já foi capa', d: 'Se já apareceu no resumo do jogo, não é para o Radar.' },
-      { n: '03', t: 'Do relvado à diáspora', d: 'Jogadores, sim — mas também roupeiros, treinadores de formação, adeptos e quem liga as ilhas à seleção.' }
+      { n: '01', t: 'Um jogador por edição', d: 'Um jogador, contado a fundo: percurso, posição, números e o momento que o define.' },
+      { n: '02', t: 'Ficha, mapa e contexto', d: 'Cada rubrica tem a ficha do jogador, o lugar dele no 4-4-2 e o que fez com a camisola azul.' },
+      { n: '03', t: 'Do onze ao banco', d: 'Titulares, suplentes e convocados que ainda não jogaram: todos os jogadores do plantel cabem no Radar.' }
     ],
     featuredKicker: 'Esta semana no Radar',
     featured: 'pico-lopes',
@@ -377,9 +405,9 @@ export const seed = {
     ],
     suggest: {
       kicker: 'Próxima edição',
-      title: 'Quem devia\nestar',
+      title: 'Que jogador\ndevia estar',
       titleSerif: 'no Radar?',
-      text: 'Um roupeiro da Praia, um treinador de formação em Roterdão, uma adepta em Boston. Se fez a seleção acontecer sem aparecer no resumo, conta-nos.',
+      text: 'Um central que joga na Irlanda, um extremo da segunda liga holandesa, um miúdo da formação que já foi chamado. Diz-nos quem queres ver na próxima rubrica.',
       nameLabel: 'Nome',
       namePh: 'Quem é?',
       whyLabel: 'Porque merece',
@@ -393,7 +421,7 @@ export const seed = {
     moreSerif: 'a ler.',
     more: [
       { kicker: 'Relvado · Análise', title: 'O 4-4-2', titleSerif: 'de Bubista', text: 'Linhas juntas, faca afiada — o plano que levou Cabo Verde ao prolongamento com a Argentina.', href: '/relvado/o-4-4-2-de-bubista', bg: '#0F5A3A', photo: img(P.liv, '', '50% 15%') },
-      { kicker: 'Pessoas', title: 'O plantel', titleSerif: 'completo', text: 'Quem é quem nos Tubarões Azuis, da baliza ao ataque.', href: '/plantel', bg: '#B3261E', photo: img(P.can2021, '', '60% 40%') }
+      { kicker: 'Rubricas', title: 'Todos os', titleSerif: 'jogadores', text: 'Quem é quem nos Tubarões Azuis, da baliza ao ataque.', href: '/rubricas#jogadores', bg: '#B3261E', photo: img(P.can2021, '', '60% 40%') }
     ]
   },
 
@@ -643,7 +671,7 @@ export const seed = {
     lineupTitle: 'Onze inicial',
     lineupNote: 'Onze base do Mundial (o mesmo do quadro tático). [CONFIRMAR o onze deste jogo]',
     analysisCta: 'Ler a análise no Relvado',
-    plantelCta: { label: 'Ver o plantel', href: '/plantel' }
+    plantelCta: { label: 'Ver os jogadores', href: '/rubricas#jogadores' }
   },
 
   matches: [
@@ -803,38 +831,50 @@ export const seed = {
         kicker: 'Laboratório tático',
         title: 'Monta o',
         titleSerif: 'plano de Bubista.',
-        intro: 'O 4-4-2 de Cabo Verde, peça a peça. Muda de fase e de formação, toca num jogador e mexe nas instruções — o campo reage. "Repor o plano" volta à escolha original.',
+        intro: 'O 4-4-2 de Cabo Verde, peça a peça, com as mecânicas de um simulador de treinador. Escolhe o momento do jogo, toca num jogador para lhe mudar a função, o dever e as instruções, arrasta suplentes para o campo — e vê a equipa mexer e a análise mudar. Tens três táticas: a primeira é o plano real; as outras são tuas.',
+        name: 'Plano de Bubista',
+        style: 'bubista',
+        mentality: 'Equilibrada',
         formation: '4-4-2',
         team: {
-          posse: { tWidth: 'Normal', tempo: 'Rápido', tPass: 'Misto', saidaGR: 'Mista', attackZone: 'Equilibrado' },
-          transicao: { lost: 'Reagrupar', won: 'Contra-ataque', gkDist: 'Rápida' },
-          sem: { block: 'Médio', line: 'Normal', intensity: 'Normal', trigger: 'Bola na ala', compact: 'Curta' }
+          ataque: { tWidth: 'Normal', tempo: 'Rápido', tPass: 'Direto', buildUp: 'Equilibrada', attackZone: 'Equilibrado', finalThird: 'Equilibrado', crossType: 'Misto', creative: 'Equilibrada' },
+          transof: { won: 'Contra-ataque', counterRoute: 'Pelo jogador livre', gkDist: 'Rápida', gkTarget: 'Laterais', gkType: 'Mista' },
+          transdef: { lost: 'Reagrupar', cpTime: 'Normal (5 s)', recovery: 'Recua logo', tacticalFoul: 'Não' },
+          defesa: { block: 'Média', line: 'Normal', intensity: 'Normal', trigger: 'Bola na ala', compact: 'Estreita', funnel: 'Para fora', tTackle: 'Normal', offside: 'Não', stopGK: 'Não', stopCross: 'Não' }
         },
         notes: {
-          posse: 'Com bola: ataque vertical, largura dada pelos corredores e chegada rápida ao último terço.',
-          transicao: 'Ao perder, reagrupa primeiro; ao ganhar, procura logo o contra-ataque.',
-          sem: 'Sem bola: bloco médio, linhas curtas e pressão quando a bola vai para a ala.'
+          ataque: 'Poucos toques e muita verticalidade: a largura vem de Wagner Pina na direita, Kevin Pina fecha por dentro para atacar a área ao lado dos dois avançados.',
+          defesa: 'Bloco médio e estreito. Os avançados fecham o passe para o pivô; quando a bola vai para a ala, a equipa sobe e usa a linha lateral como um defesa a mais.',
+          transof: 'Bola ganha, bola para a frente. Deroy Duarte e Kevin Pina atacam a área; Livramento ataca a profundidade. Foi assim o golo à Argentina.',
+          transdef: 'Ao perder, primeiro fecha-se o meio: os médios-centro recuam antes de a linha voltar a subir. Nada de contrapressão a todo o custo.',
+          bolaparada: 'Os centrais atacam a bola no centro e ao 2.º poste; um avançado tapa o guarda-redes. [A CONFIRMAR: batedores e esquemas reais do Mundial.]'
         },
         players: [
-          { pid: 'voz', name: 'Vozinha', ini: 'VO', role: 'gr', apply: 'posicao', attrs: {}, posse: {}, sem: {} },
-          { pid: 'jp', name: 'João Paulo', ini: 'JP', role: 'lateral', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
-          { pid: 'diney', name: 'Diney', ini: 'DI', role: 'central', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
-          { pid: 'pico', name: 'Pico', ini: 'PI', role: 'central-org', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
-          { pid: 'wagner', name: 'W. Pina', ini: 'WP', role: 'lateral-of', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
-          { pid: 'ryan', name: 'Ryan Mendes', ini: 'RM', role: 'medio-ala', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
-          { pid: 'deroy', name: 'Deroy', ini: 'DD', role: 'box', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
-          { pid: 'jamiro', name: 'Jamiro', ini: 'JM', role: 'medio-def', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
-          { pid: 'kevin', name: 'Kevin Pina', ini: 'KP', role: 'ala-interior', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
-          { pid: 'liv', name: 'Livramento', ini: 'DL', role: 'pressao', apply: 'jogador', attrs: {}, posse: {}, sem: {} },
-          { pid: 'willy', name: 'W. Semedo', ini: 'WS', role: 'pressao', apply: 'jogador', attrs: {}, posse: {}, sem: {} }
-        ]
+          { pid: 'voz', role: 'gr', duty: 'De', apply: 'posicao', posse: {}, sem: {}, trans: {} },
+          { pid: 'jp', role: 'lateral', duty: 'Ap', apply: 'jogador', posse: {}, sem: {}, trans: {} },
+          { pid: 'diney', role: 'central', duty: 'De', apply: 'jogador', posse: {}, sem: {}, trans: {} },
+          { pid: 'pico', role: 'central-org', duty: 'De', apply: 'jogador', posse: {}, sem: {}, trans: {} },
+          { pid: 'wagner', role: 'lateral-of', duty: 'At', apply: 'jogador', posse: {}, sem: {}, trans: {} },
+          { pid: 'ryan', role: 'ala-defensivo', duty: 'Ap', apply: 'jogador', posse: {}, sem: {}, trans: {} },
+          { pid: 'deroy', role: 'box', duty: 'Ap', apply: 'jogador', posse: {}, sem: {}, trans: { tRun: 'Atacar a profundidade' } },
+          { pid: 'jamiro', role: 'medio-centro', duty: 'De', apply: 'jogador', posse: { passRisk: 'Normal' }, sem: {}, trans: {} },
+          { pid: 'kevin', role: 'ala-interior', duty: 'At', apply: 'jogador', posse: {}, sem: {}, trans: {} },
+          { pid: 'liv', role: 'pressao', duty: 'At', apply: 'jogador', posse: {}, sem: { closePass: 'Sim' }, trans: {} },
+          { pid: 'willy', role: 'pressao', duty: 'Ap', apply: 'jogador', posse: {}, sem: { closePass: 'Sim' }, trans: {} }
+        ],
+        bench: ['helio', 'sidny', 'garry'],
+        setPieces: {
+          cantoOf: { side: 'Direita', delivery: '1.º poste', taker: 'jamiro', jobs: { pico: 'Atacar o centro', diney: 'Atacar o 2.º poste', liv: 'Tapar o guarda-redes', willy: 'Atacar o 1.º poste', deroy: 'Entrada da área', kevin: 'Entrada da área' } },
+          livreOf: { side: 'Esquerda', delivery: '2.º poste', taker: 'ryan', jobs: {} },
+          cantoDef: { side: 'Direita', system: 'Misto', jobs: {} }
+        }
       },
       relatedTitle: 'Os homens',
       relatedSerif: 'do plano.',
       related: [
-        { name: 'Pico Lopes', label: 'O bloco', href: '/plantel', bg: '#0B3B8C', photo: img(P.pico, '', '50% 20%') },
-        { name: 'Livramento', label: 'O gatilho', href: '/plantel', bg: '#0B3B8C', photo: img(P.liv, '', '50% 12%') },
-        { name: 'Deroy Duarte', label: 'A transição', href: '/plantel', bg: '#0F5A3A', photo: img(P.deroy, '', '52% 20%') },
+        { name: 'Pico Lopes', label: 'O bloco', href: '/rubricas#jogadores', bg: '#0B3B8C', photo: img(P.pico, '', '50% 20%') },
+        { name: 'Livramento', label: 'O gatilho', href: '/rubricas#jogadores', bg: '#0B3B8C', photo: img(P.liv, '', '50% 12%') },
+        { name: 'Deroy Duarte', label: 'A transição', href: '/rubricas#jogadores', bg: '#0F5A3A', photo: img(P.deroy, '', '52% 20%') },
         { name: 'Hélio Varela', label: 'O banco', href: '/rubricas/helio-varela', bg: '#B3261E', photo: img(P.helio, '', '68% 28%') }
       ],
       credits: 'Fotografias via Wikimedia Commons: Petsbikes (CC BY 4.0) · Effathéophile105 (CC BY-SA 4.0) · Irish Football Fan TV (CC BY 3.0) · Biso (CC BY 4.0).'
@@ -860,15 +900,19 @@ export const templates = {
     date: '[DATA]',
     cover: img('', 'Imagem de capa'),
     coverCaption: 'Legenda da imagem. Foto: [CRÉDITO]',
+    // Toda a análise do Relvado segue os 5 momentos do jogo, cada um ligado a uma fase do quadro tático.
     body: [
-      { type: 'lead', text: 'Primeiro parágrafo, com letra capitular.' },
-      { type: 'h2', num: '01', text: 'Primeira secção' },
-      { type: 'p', text: 'Escreve aqui.' }
+      { type: 'lead', text: 'Primeiro parágrafo, com letra capitular: o jogo em duas ou três frases.' },
+      ...[['01', 'Ataque', 'Com bola e organizado: como a equipa constrói e chega ao último terço.'], ['02', 'Defesa', 'Sem bola e organizado: bloco, linhas e gatilhos de pressão.'], ['03', 'Transição ofensiva', 'Os segundos depois de ganhar a bola.'], ['04', 'Transição defensiva', 'Os segundos depois de perder a bola.'], ['05', 'Bola parada', 'Cantos, livres e lançamentos — a favor e contra.']].flatMap(([num, text, hint], i) => [
+        { type: 'h2', num, text, moment: i },
+        { type: 'p', text: hint + ' [ESCREVER A ANÁLISE]' },
+        { type: 'phase', label: 'Ver no campo', phase: i }
+      ])
     ],
     tags: ['Etiqueta'],
     boardKicker: 'Quadro tático',
     board: clonePhases(),
-    tactic: JSON.parse(JSON.stringify(seed.articles[0].tactic)),
+    tactic: { ...JSON.parse(JSON.stringify(seed.articles[0].tactic)), title: 'Monta o', titleSerif: 'teu plano.' },
     match: '',
     relatedTitle: 'Para continuar',
     relatedSerif: 'a ler.',
@@ -913,3 +957,63 @@ function clonePhases() {
   const m = (key: string, label: string, pos: number[][], band: boolean) => ({ key, label, title: label, caption: 'Descrição deste momento.', band, notes: [], players: roster(pos, BASE_NAMES, []) });
   return { phases: [m('ataque', 'Ataque', ART_POS.ataque, false), m('defesa', 'Defesa', ART_POS.bloco, true), m('transof', 'Trans. ofensiva', ART_POS.transicao, false), m('transdef', 'Trans. defensiva', ART_POS.transdef, true), m('bolaparada', 'Bola parada', ART_POS.canto, false)] };
 }
+
+// ---------------------------------------------------------------------------
+// Rascunhos (não publicados) das análises dos outros jogos do Mundial.
+// Já têm os 5 momentos, o quadro tático e o laboratório; só usam factos que já estão no site —
+// o resto está marcado [ESCREVER] / [A CONFIRMAR]. Publicam-se em "Conteúdos" na barra do admin.
+const draft = (o: { slug: string; match: string; kicker: string; titleLines: string; titleSerif: string; summary: string; lead: string; cover?: any; coverCaption?: string; tags: string[] }) => {
+  const a: any = templates.article(o.slug);
+  return {
+    ...a,
+    match: o.match,
+    kicker: o.kicker,
+    titleLines: o.titleLines,
+    titleSerif: o.titleSerif,
+    summary: o.summary,
+    deck: o.summary,
+    cover: o.cover || a.cover,
+    coverCaption: o.coverCaption || a.coverCaption,
+    body: [{ type: 'lead', text: o.lead }, ...a.body.slice(1)],
+    tags: o.tags,
+    relatedTitle: 'Os homens',
+    relatedSerif: 'do jogo.',
+    credits: o.coverCaption ? 'Fotografia via Wikimedia Commons (ver legenda).' : ''
+  };
+};
+(seed.articles as any[]).push(
+  draft({
+    slug: 'espanha-cabo-verde-analise',
+    match: 'espanha-cabo-verde-2026',
+    kicker: 'Relvado · Análise · Grupo H, 1.ª jornada',
+    titleLines: 'Espanha 0–0\nCabo Verde.',
+    titleSerif: 'A estreia que estragou a estreia.',
+    summary: 'Como os Tubarões Azuis seguraram uma das favoritas no primeiro jogo da sua história em Mundiais. [ESCREVER]',
+    lead: 'A estreia que estragou a estreia de uma das favoritas: Cabo Verde entrou no primeiro Mundial da sua história com um 0–0 frente à Espanha. [ESCREVER: o jogo em duas ou três frases.]',
+    tags: ['Mundial 2026', 'Espanha', 'Bloco médio', 'Estreia']
+  }),
+  draft({
+    slug: 'uruguai-cabo-verde-analise',
+    match: 'uruguai-cabo-verde-2026',
+    kicker: 'Relvado · Análise · Grupo H, 2.ª jornada',
+    titleLines: 'Uruguai 2–2\nCabo Verde.',
+    titleSerif: 'O banco que empatou.',
+    summary: 'Golaço de Kevin Pina, reviravolta celeste e Hélio Varela, saído do banco, a empatar outra vez. [ESCREVER]',
+    lead: 'Golaço de Kevin Pina, reviravolta celeste e Hélio Varela, saído do banco, a empatar outra vez. [ESCREVER: o jogo em duas ou três frases, com os minutos dos golos.]',
+    cover: img(P.helio, 'Hélio Varela conduz a bola no Mundial 2026', '62% 40%'),
+    coverCaption: 'Hélio Varela no Mundial 2026. Foto: Petsbikes · CC BY 4.0',
+    tags: ['Mundial 2026', 'Uruguai', 'Kevin Pina', 'Hélio Varela']
+  }),
+  draft({
+    slug: 'cabo-verde-arabia-saudita-analise',
+    match: 'cabo-verde-arabia-saudita-2026',
+    kicker: 'Relvado · Análise · Grupo H, 3.ª jornada',
+    titleLines: 'Cabo Verde 0–0\nArábia Saudita.',
+    titleSerif: 'Noventa minutos e uma espera.',
+    summary: '68.278 no estádio em Houston e uma equipa inteira no relvado à espera do Espanha–Uruguai. [ESCREVER]',
+    lead: '68.278 pessoas em Houston e um 0–0 que deixou uma equipa inteira no relvado à espera do Espanha–Uruguai. [ESCREVER: o jogo em duas ou três frases.]',
+    cover: img(P.festaGolo, 'Dois jogadores de Cabo Verde abraçam-se a festejar', '50% 30%'),
+    coverCaption: 'Foto: [FCF — confirmar]',
+    tags: ['Mundial 2026', 'Arábia Saudita', 'Houston', 'Apuramento']
+  })
+);

@@ -81,6 +81,12 @@ export default function RelvadoPage() {
               </span>
             </Link>
           )}
+          {lead && (
+            <div className="rl-lab-cta">
+              <span><b>Laboratório tático</b> Muda a formação, as funções e as instruções nos 5 momentos — como num simulador de treinador.</span>
+              <Link href={'/relvado/' + lead.slug + '#laboratorio'} className="btn pill pill-acc">Abrir o laboratório <Arrow /></Link>
+            </div>
+          )}
           <div className="rl-grid">
             {list.slice(1).map((a: any) => (
               <Link key={a.slug} href={'/relvado/' + a.slug} className="rl-card sr">
