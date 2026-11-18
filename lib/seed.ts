@@ -84,8 +84,54 @@ function withScout<T extends { id: string }>(list: T[]) {
   });
 }
 
+/**
+ * Restantes jogadores da seleção: os 26 do Mundial 2026, as convocatórias de Humberto Bettencourt
+ * (setembro e novembro de 2026) e os chamados durante a qualificação (2023–2025).
+ * Sem foto nem avaliação: a foto carrega-se no admin, os atributos no laboratório tático.
+ * bench: false → não aparecem no "Banco" do onze (que mostra só as opções usadas no Mundial).
+ */
+const np = (id: string, name: string, short: string, ini: string, pos: string, num: string, club: string, tag: string, bio: string) => ({
+  id, name, short, ini, pos, num, captain: false, xi: null, strip: false, bench: false,
+  photo: img('', name), face: [50, 30, 1], tag, bio, club, radar: ''
+});
+const MORE_PLAYERS = [
+  // Mundial 2026
+  np('cj', 'CJ dos Santos', 'CJ', 'CS', 'gr', '23', 'San Diego FC', 'Guarda-redes do San Diego FC.', 'Fez parte dos 26 do Mundial 2026, com a camisola 23, e continua nas convocatórias de Humberto Bettencourt.'),
+  np('rosa', 'Márcio Rosa', 'M. Rosa', 'MR', 'gr', '12', 'UTA Arad', 'Guarda-redes do UTA Arad.', 'Chamado na qualificação e no Mundial 2026, com a camisola 12. Continua nas escolhas de Humberto Bettencourt.'),
+  np('logan', 'Logan Costa', 'Logan', 'LC', 'def', '5', 'Villarreal', 'Central do Villarreal.', 'Defesa do Villarreal, convocado para o Mundial 2026 com a camisola 5. Continua nas escolhas do novo selecionador.'),
+  np('steven', 'Steven Moreira', 'S. Moreira', 'SM', 'def', '22', 'Columbus Crew', 'Defesa do Columbus Crew.', 'Convocado para o Mundial 2026 com a camisola 22, a partir da MLS.'),
+  np('kelvin', 'Kelvin Pires', 'K. Pires', 'KE', 'def', '25', 'SJK', 'Defesa do SJK, na Finlândia.', 'Presente na qualificação e no Mundial 2026, com a camisola 25.'),
+  np('stopira', 'Stopira', 'Stopira', 'ST', 'def', '2', 'Torreense', 'O veterano da defesa.', 'Ianique Tavares, conhecido como Stopira, foi um dos mais experientes do Mundial 2026, com a camisola 2. Ficou de fora da primeira convocatória depois do Mundial.'),
+  np('telmo', 'Telmo Arcanjo', 'Telmo', 'TA', 'med', '18', 'Vitória SC', 'Médio do Vitória SC.', 'Convocado para o Mundial 2026 com a camisola 18 e chamado de novo em setembro de 2026.'),
+  np('laros', 'Laros Duarte', 'L. Duarte', 'LD', 'med', '15', 'Puskás Akadémia', 'Médio do Puskás Akadémia.', 'Convocado para o Mundial 2026 com a camisola 15. Continua nas escolhas de Humberto Bettencourt.'),
+  np('yannick', 'Yannick Semedo', 'Y. Semedo', 'YS', 'med', '16', 'Al-Jabalain', 'Médio, agora no Al-Jabalain.', 'Fez parte dos 26 do Mundial 2026, com a camisola 16. Ficou de fora da primeira convocatória de Humberto Bettencourt.'),
+  np('jovane', 'Jovane Cabral', 'Jovane', 'JC', 'av', '7', 'Grêmio', 'Avançado, agora no Grêmio.', 'Convocado para o Mundial 2026 com a camisola 7 e chamado de novo em setembro de 2026, já ao serviço do Grêmio.'),
+  np('nuno', 'Nuno da Costa', 'N. da Costa', 'NC', 'av', '21', 'Antalyaspor', 'Avançado do Antalyaspor.', 'Foi ao Mundial 2026 com a camisola 21 e continua nas convocatórias depois do Mundial.'),
+  np('benchimol', 'Gilson Benchimol', 'Benchimol', 'GB', 'av', '9', 'Akron Togliatti', 'Avançado do Akron Togliatti.', 'Convocado para o Mundial 2026 com a camisola 9.'),
+  // Convocatórias de Humberto Bettencourt (setembro e novembro de 2026)
+  np('ayoni', 'Ayoni Santos', 'Ayoni', 'AS', 'med', '', 'PSV Eindhoven', 'Médio do PSV Eindhoven.', 'Uma das duas novidades da primeira convocatória de Humberto Bettencourt, em setembro de 2026.'),
+  np('dje', 'Djé Tavares', 'Djé', 'DT', 'med', '', 'Santa Clara', 'Médio do Santa Clara.', 'Estreou-se nas convocatórias em setembro de 2026, aos 23 anos, depois de um arranque de época forte no Santa Clara.'),
+  np('davidm', 'David Moreira', 'D. Moreira', 'DM', 'def', '', 'Gil Vicente', 'Defesa do Gil Vicente.', 'Já tinha sido chamado na qualificação para o Mundial, quando jogava no Sporting. Regressou em novembro de 2026.'),
+  np('ivanildo', 'Ivanildo Fernandes', 'Ivanildo', 'IF', 'def', '', 'Nacional', 'Defesa do Nacional.', 'Voltou às convocatórias em novembro de 2026, para a dupla jornada com a Libéria.'),
+  np('yuran', 'Yuran Fernandes', 'Yuran', 'YF', 'def', '', 'Persebaya Surabaya', 'Defesa do Persebaya Surabaya.', 'Chamado em novembro de 2026, a partir da liga da Indonésia, para a dupla jornada com a Libéria.'),
+  np('elson', 'Elson da Silva', 'Elson', 'ES', 'med', '', 'Kasımpaşa', 'Médio do Kasımpaşa.', 'Uma das sete novidades da convocatória de novembro de 2026.'),
+  np('derenseli', 'Derenseli Fernandes', 'Derenseli', 'DF', 'av', '', 'Huddersfield Town', 'Avançado do Huddersfield Town.', 'Uma das sete novidades da convocatória de novembro de 2026.'),
+  np('leandro', 'Leandro Andrade', 'L. Andrade', 'LA', 'av', '', 'Polissya', 'Avançado do Polissya.', 'Já tinha sido chamado no ciclo anterior, quando jogava no Qarabag. Regressou em novembro de 2026.'),
+  np('ieltsin', 'Ieltsin Camões', 'Ieltsin', 'IC', 'av', '', 'Śląsk Wrocław', 'Avançado do Śląsk Wrocław.', 'Uma das sete novidades da convocatória de novembro de 2026.'),
+  // Chamados durante a qualificação (2023–2025)
+  np('brunov', 'Bruno Varela', 'B. Varela', 'BV', 'gr', '', '[CLUBE]', 'Guarda-redes.', 'Chamado na qualificação para o Mundial 2026, em 2025, quando jogava no Al-Hazm.'),
+  np('dylans', 'Dylan Silva', 'D. Silva', 'DS', 'gr', '', '[CLUBE]', 'Guarda-redes.', 'Chamado no arranque da qualificação para o Mundial 2026, em novembro de 2023, quando jogava no Sintrense.'),
+  np('joaoc', 'João Correia', 'J. Correia', 'JO', 'def', '', '[CLUBE]', 'Lateral direito.', 'Chamado no arranque da qualificação para o Mundial 2026, em novembro de 2023, quando jogava no Chaves.'),
+  np('dylant', 'Dylan Tavares', 'D. Tavares', 'DY', 'def', '', '[CLUBE]', 'Defesa.', 'Regressou às convocatórias em novembro de 2024, na qualificação para a CAN 2025.'),
+  np('ailson', 'Aílson Tavares', 'Aílson', 'AT', 'med', '', '[CLUBE]', 'Médio.', 'Chamado na qualificação para o Mundial 2026, em 2025, quando jogava no Beitar Jerusalém.'),
+  np('jair', 'Jair Semedo', 'J. Semedo', 'JS', 'med', '', '[CLUBE]', 'Médio.', 'Chamado na qualificação para o Mundial 2026, em 2025, quando jogava no Farense.'),
+  np('heriberto', 'Heriberto Tavares', 'Heriberto', 'HT', 'med', '', '[CLUBE]', 'Médio.', 'Chamado na qualificação para o Mundial 2026, em 2025, quando jogava no Maccabi Netanya.'),
+  np('patrick', 'Patrick Andrade', 'P. Andrade', 'PA', 'med', '', '[CLUBE]', 'Médio.', 'Regressou às convocatórias em novembro de 2024, na qualificação para a CAN 2025.'),
+  np('alessio', 'Alessio da Cruz', 'A. da Cruz', 'AC', 'av', '', '[CLUBE]', 'Avançado.', 'Chamado em setembro de 2025, na qualificação para o Mundial, quando jogava no Athletic, do Brasil.')
+];
+
 export const seed = {
-  version: 2,
+  version: 3,
 
   settings: {
     siteName: 'BOXtoBOX',
@@ -318,20 +364,21 @@ export const seed = {
   },
 
   players: withScout([
-    { id: 'voz', name: 'Vozinha', short: 'Vozinha', ini: 'VO', pos: 'gr', num: '1', captain: false, xi: [50, 91], strip: true, photo: img(P.vozinha, 'Vozinha', '50% 16%', 'Petsbikes · CC BY 4.0'), face: [47, 24, 1.9], tag: 'O rosto mais conhecido da seleção.', bio: 'Guarda-redes dos Tubarões Azuis no primeiro Mundial da história. Uma baliza que só caiu no prolongamento frente à campeã do mundo.', club: '[CLUBE]', radar: '' },
-    { id: 'jp', name: 'João Paulo', short: 'João Paulo', ini: 'JP', pos: 'def', num: '', captain: false, xi: [15, 71], strip: false, photo: img('', 'João Paulo'), face: [50, 30, 1], tag: 'Lateral esquerdo do onze base.', bio: 'Titular no lado esquerdo da defesa no onze que empatou com a Arábia Saudita em Houston.', club: '[CLUBE]', radar: '' },
-    { id: 'diney', name: 'Diney', short: 'Diney', ini: 'DI', pos: 'def', num: '', captain: false, xi: [38, 76], strip: false, photo: img('', 'Diney'), face: [50, 30, 1], tag: 'Central ao lado de Pico.', bio: 'A outra metade da dupla de centrais no 4-4-2 de Bubista.', club: '[CLUBE]', radar: '' },
-    { id: 'pico', name: 'Pico Lopes', short: 'Pico', ini: 'PI', pos: 'def', num: '', captain: false, xi: [62, 76], strip: true, photo: img(P.pico, 'Pico Lopes', '50% 20%', 'Irish Football Fan TV · CC BY 3.0'), face: [50, 30, 1.7], tag: 'Nascido em Dublin. Chefe da defesa.', bio: 'Central irlandês de pai cabo-verdiano, recrutado com uma mensagem no LinkedIn. Organiza o bloco que travou Espanha e Uruguai.', club: '[CLUBE]', radar: 'pico-lopes' },
-    { id: 'wagner', name: 'Wagner Pina', short: 'W. Pina', ini: 'WP', pos: 'def', num: '', captain: false, xi: [85, 71], strip: true, photo: img(P.wagner, 'Wagner Pina', '50% 30%', 'Şadi Akdoğan · CC BY 4.0'), face: [52, 38, 1.6], tag: 'O lateral que prende o lateral.', bio: 'Sobe pelo corredor direito na transição e obriga o lateral adversário a ficar em casa.', club: '[CLUBE]', radar: '' },
-    { id: 'ryan', name: 'Ryan Mendes', short: 'Ryan Mendes', ini: 'RM', pos: 'med', num: '20', captain: true, xi: [15, 45], strip: true, photo: img(P.ryan, 'Ryan Mendes', '50% 12%', 'Petsbikes · CC BY 4.0'), face: [51, 12, 3.2], tag: 'Capitão. Ala esquerda.', bio: 'A braçadeira dos Tubarões Azuis no Mundial 2026. Recua até à linha defensiva sem bola e dá largura com ela.', club: '[CLUBE]', radar: '' },
-    { id: 'deroy', name: 'Deroy Duarte', short: 'Deroy', ini: 'DD', pos: 'med', num: '', captain: false, xi: [38, 51], strip: true, photo: img(P.deroy, 'Deroy Duarte', '52% 20%', 'Biso · CC BY 4.0'), face: [52, 25, 3], tag: 'Marcou à Argentina, aos 59 minutos.', bio: 'Liga bloco e ataque. Pisa a área quando a bola é recuperada — e foi assim que marcou à campeã do mundo.', club: '[CLUBE]', radar: 'deroy-duarte' },
-    { id: 'jamiro', name: 'Jamiro Monteiro', short: 'Jamiro', ini: 'JM', pos: 'med', num: '', captain: false, xi: [62, 51], strip: true, photo: img(P.jamiro, 'Jamiro Monteiro', '50% 18%', 'Morgan Tencza · CC BY-SA 4.0'), face: [48, 18, 2.6], tag: 'Médio-centro do bloco.', bio: 'Ao lado de Deroy Duarte no meio, fecha o espaço por dentro e dá a primeira saída de bola.', club: '[CLUBE]', radar: '' },
-    { id: 'kevin', name: 'Kevin Pina', short: 'Kevin Pina', ini: 'KP', pos: 'med', num: '', captain: false, xi: [85, 45], strip: true, photo: img(P.kevin, 'Kevin Pina', '70% 18%', 'Дмитрий Пукалик · CC BY-SA 3.0'), face: [79, 13, 2.4], tag: 'O golaço contra o Uruguai.', bio: 'Ala direita no 4-4-2. Ataca a área na transição e assinou um dos golos da fase de grupos.', club: '[CLUBE]', radar: '' },
-    { id: 'liv', name: 'Dailon Livramento', short: 'Livramento', ini: 'DL', pos: 'av', num: '19', captain: false, xi: [38, 20], strip: true, photo: img(P.liv, 'Dailon Livramento', '50% 12%', 'Petsbikes · CC BY 4.0'), face: [48, 12, 3.2], tag: 'Fecha o primeiro passe.', bio: 'Na frente, ao lado de Willy Semedo, corta a ligação ao pivô adversário e ataca a profundidade quando a bola é ganha.', club: '[CLUBE]', radar: '' },
-    { id: 'willy', name: 'Willy Semedo', short: 'W. Semedo', ini: 'WS', pos: 'av', num: '', captain: false, xi: [62, 20], strip: false, photo: img('', 'Willy Semedo'), face: [50, 30, 1], tag: 'A dupla de Livramento.', bio: 'O outro avançado do 4-4-2: primeiro defensor da equipa e referência na saída rápida.', club: '[CLUBE]', radar: '' },
-    { id: 'helio', name: 'Hélio Varela', short: 'Hélio', ini: 'HV', pos: 'av', num: '26', captain: false, xi: null, strip: true, photo: img(P.helio, 'Hélio Varela', '68% 28%', 'Petsbikes · CC BY 4.0'), face: [72, 26, 3], tag: 'Super-suplente.', bio: 'Saiu do banco para empatar com o Uruguai. A arma de velocidade que Bubista guarda para a última meia hora.', club: '[CLUBE]', radar: 'helio-varela' },
-    { id: 'sidny', name: 'Sidny Lopes Cabral', short: 'Sidny', ini: 'SC', pos: 'av', num: '13', captain: false, xi: null, strip: false, photo: img('', 'Sidny Lopes Cabral'), face: [50, 30, 1], tag: "103' contra a Argentina.", bio: 'Pôs a bola onde o Dibu Martínez não chegava e fez Miami calar no prolongamento.', club: '[CLUBE]', radar: 'sidny-lopes-cabral' },
-    { id: 'garry', name: 'Garry Rodrigues', short: 'Garry', ini: 'GR', pos: 'av', num: '', captain: false, xi: null, strip: true, photo: img(P.garry, 'Garry Rodrigues', '45% 30%', 'senolsengul/Pixabay · CC0'), face: [47, 30, 2.4], tag: 'A experiência do banco.', bio: 'Entra para segurar a bola e dar calma quando o jogo aperta.', club: '[CLUBE]', radar: '' }
+    { id: 'voz', name: 'Vozinha', short: 'Vozinha', ini: 'VO', pos: 'gr', num: '1', captain: false, xi: [50, 91], strip: true, photo: img(P.vozinha, 'Vozinha', '50% 16%', 'Petsbikes · CC BY 4.0'), face: [47, 24, 1.9], tag: 'O rosto mais conhecido da seleção.', bio: 'Guarda-redes dos Tubarões Azuis no primeiro Mundial da história. Uma baliza que só caiu no prolongamento frente à campeã do mundo.', club: 'Colo-Colo', radar: '' },
+    { id: 'jp', name: 'João Paulo', short: 'João Paulo', ini: 'JP', pos: 'def', num: '8', captain: false, xi: [15, 71], strip: false, photo: img('', 'João Paulo'), face: [50, 30, 1], tag: 'Lateral esquerdo do onze base.', bio: 'Titular no lado esquerdo da defesa no onze que empatou com a Arábia Saudita em Houston.', club: 'FCSB', radar: '' },
+    { id: 'diney', name: 'Diney', short: 'Diney', ini: 'DI', pos: 'def', num: '3', captain: false, xi: [38, 76], strip: false, photo: img('', 'Diney'), face: [50, 30, 1], tag: 'Central ao lado de Pico.', bio: 'A outra metade da dupla de centrais no 4-4-2 de Bubista.', club: 'Sharjah', radar: '' },
+    { id: 'pico', name: 'Pico Lopes', short: 'Pico', ini: 'PI', pos: 'def', num: '4', captain: false, xi: [62, 76], strip: true, photo: img(P.pico, 'Pico Lopes', '50% 20%', 'Irish Football Fan TV · CC BY 3.0'), face: [50, 30, 1.7], tag: 'Nascido em Dublin. Chefe da defesa.', bio: 'Central irlandês de pai cabo-verdiano, recrutado com uma mensagem no LinkedIn. Organiza o bloco que travou Espanha e Uruguai.', club: 'Shamrock Rovers', radar: 'pico-lopes' },
+    { id: 'wagner', name: 'Wagner Pina', short: 'W. Pina', ini: 'WP', pos: 'def', num: '24', captain: false, xi: [85, 71], strip: true, photo: img(P.wagner, 'Wagner Pina', '50% 30%', 'Şadi Akdoğan · CC BY 4.0'), face: [52, 38, 1.6], tag: 'O lateral que prende o lateral.', bio: 'Sobe pelo corredor direito na transição e obriga o lateral adversário a ficar em casa.', club: 'Trabzonspor', radar: '' },
+    { id: 'ryan', name: 'Ryan Mendes', short: 'Ryan Mendes', ini: 'RM', pos: 'med', num: '20', captain: true, xi: [15, 45], strip: true, photo: img(P.ryan, 'Ryan Mendes', '50% 12%', 'Petsbikes · CC BY 4.0'), face: [51, 12, 3.2], tag: 'Capitão. Ala esquerda.', bio: 'A braçadeira dos Tubarões Azuis no Mundial 2026. Recua até à linha defensiva sem bola e dá largura com ela.', club: 'RS Berkane', radar: '' },
+    { id: 'deroy', name: 'Deroy Duarte', short: 'Deroy', ini: 'DD', pos: 'med', num: '14', captain: false, xi: [38, 51], strip: true, photo: img(P.deroy, 'Deroy Duarte', '52% 20%', 'Biso · CC BY 4.0'), face: [52, 25, 3], tag: 'Marcou à Argentina, aos 59 minutos.', bio: 'Liga bloco e ataque. Pisa a área quando a bola é recuperada — e foi assim que marcou à campeã do mundo.', club: 'Ludogorets', radar: 'deroy-duarte' },
+    { id: 'jamiro', name: 'Jamiro Monteiro', short: 'Jamiro', ini: 'JM', pos: 'med', num: '10', captain: false, xi: [62, 51], strip: true, photo: img(P.jamiro, 'Jamiro Monteiro', '50% 18%', 'Morgan Tencza · CC BY-SA 4.0'), face: [48, 18, 2.6], tag: 'Médio-centro do bloco.', bio: 'Ao lado de Deroy Duarte no meio, fecha o espaço por dentro e dá a primeira saída de bola.', club: 'NEC Nijmegen', radar: '' },
+    { id: 'kevin', name: 'Kevin Pina', short: 'Kevin Pina', ini: 'KP', pos: 'med', num: '6', captain: false, xi: [85, 45], strip: true, photo: img(P.kevin, 'Kevin Pina', '70% 18%', 'Дмитрий Пукалик · CC BY-SA 3.0'), face: [79, 13, 2.4], tag: 'O golaço contra o Uruguai.', bio: 'Ala direita no 4-4-2. Ataca a área na transição e assinou um dos golos da fase de grupos.', club: 'Krasnodar', radar: '' },
+    { id: 'liv', name: 'Dailon Livramento', short: 'Livramento', ini: 'DL', pos: 'av', num: '19', captain: false, xi: [38, 20], strip: true, photo: img(P.liv, 'Dailon Livramento', '50% 12%', 'Petsbikes · CC BY 4.0'), face: [48, 12, 3.2], tag: 'Fecha o primeiro passe.', bio: 'Na frente, ao lado de Willy Semedo, corta a ligação ao pivô adversário e ataca a profundidade quando a bola é ganha.', club: 'Hellas Verona', radar: '' },
+    { id: 'willy', name: 'Willy Semedo', short: 'W. Semedo', ini: 'WS', pos: 'av', num: '17', captain: false, xi: [62, 20], strip: false, photo: img('', 'Willy Semedo'), face: [50, 30, 1], tag: 'A dupla de Livramento.', bio: 'O outro avançado do 4-4-2: primeiro defensor da equipa e referência na saída rápida.', club: 'United FC', radar: '' },
+    { id: 'helio', name: 'Hélio Varela', short: 'Hélio', ini: 'HV', pos: 'av', num: '26', captain: false, xi: null, strip: true, photo: img(P.helio, 'Hélio Varela', '68% 28%', 'Petsbikes · CC BY 4.0'), face: [72, 26, 3], tag: 'Super-suplente.', bio: 'Saiu do banco para empatar com o Uruguai. A arma de velocidade que Bubista guarda para a última meia hora.', club: 'Maccabi Tel Aviv', radar: 'helio-varela' },
+    { id: 'sidny', name: 'Sidny Lopes Cabral', short: 'Sidny', ini: 'SC', pos: 'av', num: '13', captain: false, xi: null, strip: false, photo: img('', 'Sidny Lopes Cabral'), face: [50, 30, 1], tag: "103' contra a Argentina.", bio: 'Pôs a bola onde o Dibu Martínez não chegava e fez Miami calar no prolongamento.', club: 'Trabzonspor', radar: 'sidny-lopes-cabral' },
+    { id: 'garry', name: 'Garry Rodrigues', short: 'Garry', ini: 'GR', pos: 'av', num: '11', captain: false, xi: null, strip: true, photo: img(P.garry, 'Garry Rodrigues', '45% 30%', 'senolsengul/Pixabay · CC0'), face: [47, 30, 2.4], tag: 'A experiência do banco.', bio: 'Entra para segurar a bola e dar calma quando o jogo aperta.', club: 'Apollon Limassol', radar: '' },
+    ...MORE_PLAYERS
   ]),
 
   plantel: {
@@ -357,8 +404,8 @@ export const seed = {
     groupTitles: { all: 'O plantel completo.', gr: 'A baliza.', def: 'A defesa.', med: 'O meio-campo.', av: 'O ataque.' },
     filters: { all: 'Todos', gr: 'Baliza', def: 'Defesa', med: 'Meio-campo', av: 'Ataque' },
     posNames: { gr: 'Guarda-redes', def: 'Defesa', med: 'Meio-campo', av: 'Avançado' },
-    moreTitle: '[Restantes convocados]',
-    moreText: 'Completar com a lista oficial dos 26 da FCF.',
+    moreTitle: 'Convocados desde 2023',
+    moreText: 'Inclui os 26 do Mundial 2026 e todos os chamados por Bubista e por Humberto Bettencourt. Atualizado em novembro de 2026.',
     ctaTitle: 'Os que não\naparecem',
     ctaSerif: 'no resumo.',
     cta2: { label: 'Abrir a rubrica Radar', href: '/rubricas' }

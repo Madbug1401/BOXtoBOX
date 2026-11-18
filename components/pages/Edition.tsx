@@ -17,7 +17,6 @@ export default function EditionPage({ slug }: { slug: string }) {
 
   return (
     <div className="edition">
-      {!ed.editing && <div key={slug} className="wipe" aria-hidden="true"><div className="wipe-mark">N.º {e.num}</div></div>}
 
       <div className="ed-brand">
         <div className="sheet ed-brand-in">

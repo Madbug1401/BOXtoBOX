@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { E, ELink, EImg, EVideo, EList, ItemTools, EColor, EToggle, Sec, HrefLink, useEditor, SafeImg, useAccent, cx, rich } from '@/components/editor/core';
 import { Header, Footer, Arrow, Star, Ball, Pitch, submitForm } from '@/components/site/ui';
@@ -10,6 +10,11 @@ const ring = (n: number, size: string, delay0: number, step: number) =>
     style: { position: 'absolute', left: '50%', top: '50%', transform: `translate(-50%, -50%) rotate(${i * 36}deg) translateY(calc(${size} * -0.46))` } as React.CSSProperties,
     delay: (delay0 + i * step).toFixed(2) + 's'
   }));
+
+// Faixas da bandeira: [topo %, altura %, cor] (azul 6 : branco 1 : vermelho 1 : branco 1 : azul 3).
+const FLAG: [number, number, string][] = [[0, 50, '#0B3B8C'], [50, 8.34, '#ffffff'], [58.33, 8.34, '#D7282F'], [66.66, 8.34, '#ffffff'], [75, 25, '#0B3B8C']];
+// Duração total da abertura (ms): tem de bater com o fim de .intro em home.css (5.95s + 1.05s).
+const INTRO_MS = 7050;
 
 function Intro({ onSkip }: { onSkip: () => void }) {
   const ed = useEditor();
@@ -29,7 +34,7 @@ function Intro({ onSkip }: { onSkip: () => void }) {
         </div>
       </div>
       <div className="i-center">
-        <div style={{ position: 'relative' }}>
+        <div className="i-mark" style={{ position: 'relative' }}>
           <div className="i-word">
             <span className="i-boxL">Box</span>
             <span className="serif i-to" style={{ color: accent }}>to</span>
@@ -37,6 +42,7 @@ function Intro({ onSkip }: { onSkip: () => void }) {
           </div>
           <svg viewBox="0 0 100 100" aria-hidden="true" className="i-svg">
             <circle className="i-cc" cx="50" cy="50" r="15" fill="none" stroke="#ffffff" strokeOpacity=".38" strokeWidth=".45" pathLength={1} />
+            <circle className="i-wave" cx="50" cy="50" r="10" fill="none" stroke="#F7D116" strokeWidth=".8" />
             <path className="i-br" d="M37 27H9V73H37" fill="none" stroke="#ffffff" strokeWidth="7" pathLength={1} />
             <path className="i-br" d="M63 27H91V73H63" fill="none" stroke="#ffffff" strokeWidth="7" pathLength={1} />
             <g transform="translate(50 50) scale(1.1)"><Ball fill="#F7D116" ink="#061633" id="ib" className="i-ball" /></g>
@@ -49,9 +55,15 @@ function Intro({ onSkip }: { onSkip: () => void }) {
           ))}
         </p>
       </div>
-      <div className="i-stripe" aria-hidden="true" style={{ top: '46%', background: '#ffffff', animationDelay: '2.45s' }} />
-      <div className="i-stripe" aria-hidden="true" style={{ top: '49.2%', background: '#E03A3E', animationDelay: '2.53s' }} />
-      <div className="i-stripe" aria-hidden="true" style={{ top: '52.4%', background: '#ffffff', animationDelay: '2.61s' }} />
+      {/* Ato 2: a bandeira de Cabo Verde cobre o ecrã entre o nome e o logótipo. */}
+      <div className="i-flag" aria-hidden="true">
+        {FLAG.map((b, i) => <div key={i} className="i-fb" style={{ top: b[0] + '%', height: b[1] + '%', background: b[2], ['--d' as any]: i }} />)}
+        <div className="i-fring">
+          {Array.from({ length: 10 }, (_, i) => (
+            <span key={i} className="i-fstar" style={{ ['--a' as any]: i * 36 + 'deg', ['--d' as any]: i }}><Star size={24} fill="#F7D116" /></span>
+          ))}
+        </div>
+      </div>
       <button type="button" className="i-skip" onClick={onSkip}>{it.skip}</button>
     </div>
   );
@@ -105,19 +117,24 @@ export default function HomePage() {
   const h = c.home;
   const [intro, setIntro] = useState<boolean>(!!c.settings.intro);
   const [rp, setRp] = useState(1);
+  // Decide uma só vez se a abertura passa (o React em desenvolvimento corre os efeitos duas vezes).
+  const introFirst = useRef<boolean | null>(null);
 
   useEffect(() => {
     if (!c.settings.intro || ed.editing) return setIntro(false);
-    let seen = false;
-    try { seen = sessionStorage.getItem('b2b-intro') === '1'; sessionStorage.setItem('b2b-intro', '1'); } catch {}
-    if (seen) return setIntro(false);
-    const t = setTimeout(() => setIntro(false), 5300);
+    if (introFirst.current === null) {
+      let seen = false;
+      try { seen = sessionStorage.getItem('b2b-intro') === '1'; sessionStorage.setItem('b2b-intro', '1'); } catch {}
+      introFirst.current = !seen;
+    }
+    if (!introFirst.current) return setIntro(false);
+    const t = setTimeout(() => setIntro(false), INTRO_MS + 100);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ed.editing]);
 
   const showIntro = intro && !ed.editing && c.settings.intro;
-  const base = showIntro ? '4.1s' : '.15s';
+  const base = showIntro ? '6.15s' : '.15s';
   const gTeam = c.jogos?.team || 'Cabo Verde';
   const allMatches: any[] = c.matches || [];
   const finals = allMatches.filter((m) => m.status === 'final');
@@ -130,6 +147,44 @@ export default function HomePage() {
   const today = new Date().toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const ticker = ed.editing ? h.ticker : [...h.ticker, ...h.ticker];
   const tags = ed.editing ? h.tags : [...h.tags, ...h.tags];
+
+  const news: any[] = h.news?.items || [];
+  const newsCard = (n: any, p: string, i: number) => (
+    <HrefLink key={p} path={p + '.href'} className={cx('hf-n eitem', i === 0 ? 'hf-lead' : 'hf-item')} style={{ ['--i' as any]: i }}>
+      <span className="hf-img ph">
+        {n.video?.src ? (
+          <video src={n.video.src} poster={n.video.poster || undefined} muted loop playsInline autoPlay preload="metadata" aria-label={n.title} />
+        ) : n.photo?.src || ed.editing ? (
+          <EImg path={p + '.photo'} className="cover" label=" " />
+        ) : (
+          <span className="hf-ph" aria-hidden="true"><Star size={i === 0 ? 64 : 28} fill={accent} /></span>
+        )}
+        {n.video?.src && <span className="hf-play" aria-hidden="true">▶ Vídeo</span>}
+      </span>
+      {i === 0 && !ed.editing && (
+        // Selo: a revista assina a capa. O texto gira devagar; a bola fica parada no centro.
+        <span className="hf-seal" aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <defs><path id="hf-seal-c" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" /></defs>
+            <circle cx="60" cy="60" r="58" fill="#061633" />
+            <circle cx="60" cy="60" r="55" fill="none" stroke={accent} strokeWidth="1" />
+            <g className="hf-seal-txt">
+              <text fill="#ffffff" fontSize="8.6" fontWeight="800" letterSpacing="1.6" textLength="272" lengthAdjust="spacing"><textPath href="#hf-seal-c">BOX TO BOX · REVISTA DOS TUBARÕES AZUIS ·</textPath></text>
+            </g>
+            <g transform="translate(60 60) scale(1.55)"><Ball fill={accent} ink="#061633" id="hfs" /></g>
+          </svg>
+        </span>
+      )}
+      <span className="hf-b">
+        {i > 0 && <span className="hf-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>}
+        <E path={p + '.kicker'} className="hf-k" />
+        <E path={p + '.title'} className="hf-t" />
+        <E path={p + '.text'} className="hf-p" />
+        {i === 0 && !ed.editing ? <span className="hf-go">Ler a notícia <Arrow size={16} /></span> : <E path={p + '.date'} className="hf-d" />}
+      </span>
+      <ItemTools />
+    </HrefLink>
+  );
 
   return (
     <div className="home" style={{ ['--base' as any]: base, ['--mbase' as any]: base }}>
@@ -146,31 +201,27 @@ export default function HomePage() {
               <a href="#jogos-w">Jogos</a><a href="#relvado-w">Relvado</a><a href="#rubricas-w">Rubricas</a>
             </nav>
           </div>
-          <h1 id="news-h" className="display hf-title"><span className="mask"><span><E path="home.news.title" /></span></span> <span className="mask" style={{ ['--i' as any]: 1 }}><span><E path="home.news.titleSerif" className="serif acc" /></span></span></h1>
-          <div className="hf-grid">
-            <EList path="home.news.items" newItem={{ kicker: 'Secção', title: 'Título da notícia', text: 'Resumo curto.', href: '/', date: '[DATA]', photo: { src: '', alt: '', pos: '50% 50%', credit: '' } }} addLabel="Notícia" render={(n, p, i) => (
-              <HrefLink path={p + '.href'} className={cx('hf-n sr eitem', i === 0 ? 'hf-lead' : 'hf-item')} style={{ ['--i' as any]: i }}>
-                <span className="hf-img ph">
-                  {n.video?.src ? (
-                    <video src={n.video.src} poster={n.video.poster || undefined} muted loop playsInline autoPlay preload="metadata" aria-label={n.title} />
-                  ) : n.photo?.src || ed.editing ? (
-                    <EImg path={p + '.photo'} className="cover" label=" " />
-                  ) : (
-                    <span className="hf-ph" aria-hidden="true"><Star size={i === 0 ? 64 : 34} fill={accent} /></span>
-                  )}
-                  {n.video?.src && <span className="hf-play" aria-hidden="true">▶ Vídeo</span>}
-                </span>
-                <span className="hf-b">
-                  {i > 0 && <span className="hf-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>}
-                  <E path={p + '.kicker'} className="hf-k" />
-                  <E path={p + '.title'} className="hf-t" />
-                  <E path={p + '.text'} className="hf-p" />
-                  <E path={p + '.date'} className="hf-d" />
-                </span>
-                <ItemTools />
-              </HrefLink>
-            )} />
-          </div>
+          {ed.editing ? (
+            <div className="hf-grid">
+              <div className="hf-head">
+                <h1 id="news-h" className="display hf-title"><E path="home.news.title" /> <E path="home.news.titleSerif" className="serif" /></h1>
+              </div>
+              <EList path="home.news.items" newItem={{ kicker: 'Secção', title: 'Título da notícia', text: 'Resumo curto.', href: '/', date: '[DATA]', photo: { src: '', alt: '', pos: '50% 50%', credit: '' } }} addLabel="Notícia" render={(n, p, i) => newsCard(n, p, i)} />
+            </div>
+          ) : (
+            <div className="hf-grid">
+              {news[0] && newsCard(news[0], 'home.news.items.0', 0)}
+              <aside className="hf-panel" aria-labelledby="news-h">
+                <div className="hf-head">
+                  <h1 id="news-h" className="display hf-title"><span className="mask"><span><E path="home.news.title" /></span></span><span className="mask" style={{ ['--i' as any]: 1 }}><span><E path="home.news.titleSerif" className="serif" /></span></span></h1>
+                  <span className="hf-head-n" aria-hidden="true">{Math.max(0, news.length - 1)} histórias desta semana</span>
+                </div>
+                <div className="hf-list">
+                  {news.slice(1).map((n: any, k: number) => newsCard(n, `home.news.items.${k + 1}`, k + 1))}
+                </div>
+              </aside>
+            </div>
+          )}
         </div>
       </Sec>
       {/* MARQUEE */}
@@ -311,7 +362,7 @@ export default function HomePage() {
 
       <Footer>
         {c.settings.intro && (
-          <button type="button" className="btn ghost-btn" onClick={() => { window.scrollTo({ top: 0 }); setIntro(false); setTimeout(() => setIntro(true), 40); setTimeout(() => setIntro(false), 5340); }}>
+          <button type="button" className="btn ghost-btn" onClick={() => { window.scrollTo({ top: 0 }); setIntro(false); setTimeout(() => setIntro(true), 40); setTimeout(() => setIntro(false), INTRO_MS + 140); }}>
             <E path="settings.replayIntro" />
           </button>
         )}

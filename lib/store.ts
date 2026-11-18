@@ -149,6 +149,22 @@ export function migrate(raw: any, c: any): any {
     for (const a of seedArts) if (!have.has(a.slug)) arts.push(clone(a));
     c.articles = arts;
   }
+  if (from < 3) {
+    // Plantel alargado (Mundial 2026 + convocatórias até novembro de 2026).
+    // Acrescenta os jogadores que faltam e preenche clube/número só onde ainda estavam vazios —
+    // o que o admin já escreveu fica como está.
+    const pls: any[] = Array.isArray(c.players) ? c.players : [];
+    for (const sp of seed.players as any[]) {
+      const p = pls.find((x) => x?.id === sp.id);
+      if (!p) { pls.push(clone(sp)); continue; }
+      if (!String(p.club || '').trim() || /^\[CLUBE/.test(p.club)) p.club = sp.club;
+      if (!String(p.num || '').trim() && sp.num) p.num = sp.num;
+    }
+    c.players = pls;
+    if (c.plantel?.moreTitle === '[Restantes convocados]') {
+      c.plantel = { ...c.plantel, moreTitle: seed.plantel.moreTitle, moreText: seed.plantel.moreText };
+    }
+  }
   c.version = seed.version;
   return c;
 }

@@ -179,9 +179,32 @@ button { font-family: inherit; }
 .pitch-edit .pl-dot:hover { box-shadow: 0 0 0 4px rgba(247,209,22,.6); }
 .pitch-edit .pl-dot:active { cursor: grabbing; }
 
+
+/* ===== Transição entre páginas: bandeira de Cabo Verde ===== */
+.pt { --pt-blue: #0B3B8C; --pt-red: #D7282F; position: fixed; inset: 0; z-index: 400; pointer-events: none; overflow: hidden; }
+.pt-in { pointer-events: auto; cursor: progress; }
+.pt-band { position: absolute; left: -1px; right: -1px; will-change: transform; }
+.pt-in .pt-band { animation: ptIn .5s var(--eio) calc(var(--d) * 30ms) both; }
+.pt-out .pt-band { transform: translateX(0); animation: ptOut .7s var(--eio) calc(100ms + var(--d) * 35ms) forwards; }
+@keyframes ptIn { from { transform: translateX(-101%); } to { transform: translateX(0); } }
+@keyframes ptOut { to { transform: translateX(101%); } }
+/* Círculo das dez estrelas, centrado na faixa vermelha a 3/8 da largura, como na bandeira. */
+.pt-ring { position: absolute; left: 37.5%; top: 62.5%; width: min(30vh, 46vw); aspect-ratio: 1; transform: translate(-50%, -50%); }
+.pt-in .pt-ring { animation: ptSpin 1.6s var(--eo) both; }
+.pt-out .pt-ring { animation: ptRingOut .45s var(--eio) forwards; }
+@keyframes ptSpin { from { rotate: -36deg; } to { rotate: 0deg; } }
+@keyframes ptRingOut { to { opacity: 0; scale: .7; rotate: 24deg; } }
+.pt-star { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; transform: rotate(var(--a)) translateY(calc(min(30vh, 46vw) * -.5)) rotate(calc(var(--a) * -1)); }
+.pt-star svg { display: block; }
+.pt-in .pt-star svg { animation: ptStar .45s var(--spr) calc(220ms + var(--d) * 28ms) both; }
+@keyframes ptStar { from { transform: scale(0) rotate(-120deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.pt-label { position: absolute; inset: 0; display: grid; place-items: center; rotate: 0deg; font: 900 clamp(22px, 3vw, 34px)/1 'Barlow Condensed', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #fff; }
+.pt-in .pt-label { animation: ptLabel .5s var(--eo) .3s both; }
+@keyframes ptLabel { from { opacity: 0; transform: translateY(8px); letter-spacing: .3em; } to { opacity: 1; transform: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   html { scroll-behavior: auto; }
   .sr, .sr-l, .clip-in, .word, .grow, .par { animation: none !important; opacity: 1 !important; clip-path: none !important; transform: none !important; }
-  .intro, .r-wipe, .p-wipe, .wipe { display: none !important; }
+  .intro, .r-wipe, .p-wipe, .wipe, .pt { display: none !important; }
 }

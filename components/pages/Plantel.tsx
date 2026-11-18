@@ -52,7 +52,8 @@ function PlayerEditor({ i }: { i: number }) {
         <ESelect path={P + '.pos'} label="Posição" options={Object.entries(c.plantel.posNames) as any} />
         <EToggle path={P + '.captain'} label="Capitão" />
         <EToggle path={P + '.strip'} label="Na faixa da homepage" />
-        <label className="e-ctl"><input type="checkbox" checked={!!p.xi} onChange={(e) => ed.set(P + '.xi', e.target.checked ? [50, 50] : null)} /><span>No onze (senão vai para o banco)</span></label>
+        <label className="e-ctl"><input type="checkbox" checked={!!p.xi} onChange={(e) => ed.set(P + '.xi', e.target.checked ? [50, 50] : null)} /><span>No onze</span></label>
+        {!p.xi && <label className="e-ctl"><input type="checkbox" checked={p.bench !== false} onChange={(e) => ed.set(P + '.bench', e.target.checked)} /><span>No banco (opções usadas no Mundial)</span></label>}
         <ESelect path={P + '.radar'} label="Edição do Radar" options={[['', '—'], ...c.editions.map((e: any) => [e.slug, `#${e.num} ${e.name}`])] as any} />
       </div>
       <FaceCtl i={i} p={p} />
@@ -102,13 +103,6 @@ export default function PlantelPage() {
 
   return (
     <div className="plantel" style={{ ['--mbase' as any]: '.5s', ['--base' as any]: '.7s' }}>
-      {!ed.editing && (
-        <div className="p-wipe" aria-hidden="true">
-          <div style={{ left: 0, width: '34%', background: '#F7D116', animationDelay: '.05s' }} />
-          <div style={{ left: '34%', width: '33%', background: '#0B3B8C', animationDelay: '.13s' }} />
-          <div style={{ left: '67%', width: '33%', background: '#B3261E', animationDelay: '.21s' }} />
-        </div>
-      )}
       <Header />
 
       <section aria-labelledby="pl-h" className="p-hero">
@@ -206,7 +200,7 @@ export default function PlantelPage() {
                   <E path="plantel.benchHint" className="p-bench-hint" />
                 </div>
                 <div className="p-bench">
-                  {players.map((p, i) => p.xi ? null : (
+                  {players.map((p, i) => p.xi || p.bench === false ? null : (
                     <button key={p.id || i} type="button" className={cx('bench', i === si && 'on')} onClick={() => pick(i)} aria-pressed={i === si}>
                       <span className="bench-face"><Face p={p} /></span>
                       <span className="bench-t"><span className="bench-n">{p.name}</span><span className="bench-s">{p.tag}</span></span>

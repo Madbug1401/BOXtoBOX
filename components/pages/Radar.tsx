@@ -160,15 +160,6 @@ export default function RadarPage() {
 
   return (
     <div className="radar" style={{ ['--mbase' as any]: '.55s', ['--base' as any]: '.7s' }}>
-      {!ed.editing && (
-        <div className="r-wipe" aria-hidden="true">
-          <div style={{ top: 0, height: '34%', background: '#061633', animationDelay: '.05s' }} />
-          <div style={{ top: '34%', height: '11%', background: '#ffffff', animationDelay: '.12s' }} />
-          <div style={{ top: '45%', height: '10%', background: '#E03A3E', animationDelay: '.19s' }} />
-          <div style={{ top: '55%', height: '11%', background: '#ffffff', animationDelay: '.26s' }} />
-          <div style={{ top: '66%', height: '34%', background: '#061633', animationDelay: '.33s' }} />
-        </div>
-      )}
       <Header theme="light" ctaPath="rubrica.suggestCta" />
 
       {/* MASTHEAD */}
